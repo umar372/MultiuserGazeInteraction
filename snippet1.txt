@@ -1,0 +1,41 @@
+Code Snippets for Seminar
+// Doble blink detection
+
+               if (itemData.Keys.Contains("is_blink"))
+                {
+                    // blinkDetected.text = "" + itemData["is_blink"];
+                    if ((bool)itemData["is_blink"] && boolAgainBlink)
+                    {
+                        numOfBlinks += 1;
+                        boolAgainBlink = false;
+                    }
+                    else {
+                        boolAgainBlink = true;
+                    }
+
+                }
+
+                if (numOfBlinks > 0)
+                {
+                    timer += Time.deltaTime;
+                    if (timer > 2f && numOfBlinks < 2)
+                    {
+                        timer = 0;
+                        numOfBlinks = 0;
+                    }
+                   /* if (timer > 0.1f && numOfBlinks < 2)
+                    {
+                        boolAgainBlink = true;
+                    }*/
+
+                    if (numOfBlinks == 2)
+                    {
+                        timer = 0;
+                        numOfBlinks = 0;
+                        boolAgainBlink = true;
+                        if (onBlinkHappen != null)
+                        {
+                            onBlinkHappen.Invoke(xpos,ypos);
+                        }
+                    }
+                }

@@ -30,7 +30,7 @@ namespace GazeData {
 
 public class GazeListner : MonoBehaviour {
 
-
+    public static GazeListner instance;
     public delegate void DwellBlinkDelegate(double posX, double posY);
     public event DwellBlinkDelegate onBlinkHappen;
 
@@ -48,14 +48,22 @@ public class GazeListner : MonoBehaviour {
     float timer;
     int numOfBlinks;
 
-    double xpos = -1;
-    double ypos = -1;
-    float confidence= -1;
-    bool isOnSurface;
+    public double xpos = -1;
+    public double ypos = -1;
+    public float confidence= -1;
+    public bool isOnSurface;
 
 
 
     GazeData.GazeData2D data_ = new GazeData.GazeData2D();
+
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     public void get_transform()
     {
@@ -86,47 +94,6 @@ public class GazeListner : MonoBehaviour {
                     }
                 }
 
-               if (itemData.Keys.Contains("is_blink"))
-                {
-                    // blinkDetected.text = "" + itemData["is_blink"];
-                    if ((bool)itemData["is_blink"] && boolAgainBlink)
-                    {
-                        numOfBlinks += 1;
-                        boolAgainBlink = false;
-                    }
-                    else {
-                        boolAgainBlink = true;
-                    }
-                   
-                        
-
-
-                }
-
-                if (numOfBlinks > 0)
-                {
-                    timer += Time.deltaTime;
-                    if (timer > 2f && numOfBlinks < 2)
-                    {
-                        timer = 0;
-                        numOfBlinks = 0;
-                    }
-                   /* if (timer > 0.1f && numOfBlinks < 2)
-                    {
-                        boolAgainBlink = true;
-                    }*/
-
-                    if (numOfBlinks == 2)
-                    {
-                        timer = 0;
-                        numOfBlinks = 0;
-                        boolAgainBlink = true;
-                        if (onBlinkHappen != null)
-                        {
-                            onBlinkHappen.Invoke(xpos,ypos);
-                        }
-                    }
-                }
                 
             }
             
@@ -150,9 +117,10 @@ public class GazeListner : MonoBehaviour {
         if (confidence >=0.91f && isOnSurface)
         {
             isDetectGesture = true;
+            timer = 0f;
         }
 
-       // BlinkDetect();
+        BlinkDetect();
 
     }
 
@@ -160,11 +128,10 @@ public class GazeListner : MonoBehaviour {
     {
         if (isDetectGesture == true)
         {
-            if (confidence < 1f)
+            if (confidence < 0.5f)
             {
                 isDetectGesture = false;
                 startedDetection = true;
-
             }
         }
         
@@ -173,11 +140,10 @@ public class GazeListner : MonoBehaviour {
             timer = timer + Time.deltaTime;
             Debug.Log("In Timer "+timer);
 
-            if (timer > 0.10f)
+            if (timer > 0.15f)
             {
                 Debug.Log("More than 500");
-                timer = 0;
-
+                
                 if (confidence >= 0.9f)
                 {
                     Debug.Log("Blink detected");
@@ -185,6 +151,7 @@ public class GazeListner : MonoBehaviour {
                     startedDetection = false;
                     if (onBlinkHappen != null)
                         onBlinkHappen.Invoke(xpos,ypos);
+                    timer = 0;
 
                 }
             }
@@ -224,7 +191,7 @@ public class GazeListner : MonoBehaviour {
             // 
             var subscriberSocket = new SubscriberSocket(IPHeader + subport);
             subscriberSocket.Subscribe(ID);
-            subscriberSocket.Subscribe("blinks");
+            //subscriberSocket.Subscribe("blinks");
 
             var msg = new NetMQMessage();
             while (is_connected && stop_thread_ == false)

@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{47EB732F-DA29-974B-92BF-F725869D8932}</ProjectGuid>
+    <ProjectGuid>{77664269-296E-F668-EB78-3EB510CBC721}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\GestureDetection.cs" />
      <Compile Include="Assets\Scripts\Eye3D.cs" />
      <Compile Include="Assets\Scripts\GameLogic.cs" />
      <Compile Include="Assets\Scripts\GazeListner.cs" />
@@ -74,16 +75,16 @@
  <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="LitJson">
- <HintPath>D:/MastersStudy/4Semester/Seminar/tesst/gitter2/gittertestrem/Assets/LitJson.dll</HintPath>
+ <HintPath>D:/MastersStudy/4Semester/Seminar/MultiuserGazeInteraction/Assets/LitJson.dll</HintPath>
  </Reference>
  <Reference Include="AsyncIO">
- <HintPath>D:/MastersStudy/4Semester/Seminar/tesst/gitter2/gittertestrem/Assets/DLLs/AsyncIO.dll</HintPath>
+ <HintPath>D:/MastersStudy/4Semester/Seminar/MultiuserGazeInteraction/Assets/DLLs/AsyncIO.dll</HintPath>
  </Reference>
  <Reference Include="MsgPack">
- <HintPath>D:/MastersStudy/4Semester/Seminar/tesst/gitter2/gittertestrem/Assets/DLLs/MsgPack.dll</HintPath>
+ <HintPath>D:/MastersStudy/4Semester/Seminar/MultiuserGazeInteraction/Assets/DLLs/MsgPack.dll</HintPath>
  </Reference>
  <Reference Include="NetMQ">
- <HintPath>D:/MastersStudy/4Semester/Seminar/tesst/gitter2/gittertestrem/Assets/DLLs/NetMQ.dll</HintPath>
+ <HintPath>D:/MastersStudy/4Semester/Seminar/MultiuserGazeInteraction/Assets/DLLs/NetMQ.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
  <HintPath>D:/InstallUnity5.6/Editor/Data/Managed/Mono.Cecil.dll</HintPath>

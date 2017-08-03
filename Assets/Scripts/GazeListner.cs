@@ -12,8 +12,6 @@ using LitJson;
 
 namespace GazeData {
 
-   
-
     [Serializable]
     public class GazeData2D
     {
@@ -57,14 +55,7 @@ public class GazeListner : MonoBehaviour {
 
     GazeData.GazeData2D data_ = new GazeData.GazeData2D();
 
-    public void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-    }
-
+ 
     public void get_transform()
     {
         lock (thisLock_)
@@ -120,7 +111,7 @@ public class GazeListner : MonoBehaviour {
             timer = 0f;
         }
 
-        BlinkDetect();
+      //  BlinkDetect();
 
     }
 

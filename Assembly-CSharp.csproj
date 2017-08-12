@@ -46,11 +46,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\GestureDetection.cs" />
+     <Compile Include="Assets\Scripts\DoubleBlink.cs" />
      <Compile Include="Assets\Scripts\Eye3D.cs" />
      <Compile Include="Assets\Scripts\GameLogic.cs" />
      <Compile Include="Assets\Scripts\GazeListner.cs" />
      <Compile Include="Assets\Scripts\GazeListner2.cs" />
+     <Compile Include="Assets\Scripts\GestureDetection.cs" />
      <Compile Include="Assets\Scripts\PupilListener.cs" />
      <None Include="Assets\samplefile.txt" />
  <Reference Include="UnityEngine.UI">

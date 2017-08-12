@@ -27,16 +27,13 @@ public class GestureDetection : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         updateGazeValues();
-
         if (confidence > 0.9f && isGazeOnSurface)
         {
             isDetection = false;
         } else {
             isDetection = true;
         }
-
         DetectBlink();
-
     }
 
 
@@ -51,7 +48,7 @@ public class GestureDetection : MonoBehaviour {
             yPos = instanceP1.ypos;
             confidence = instanceP1.confidence;
             isGazeOnSurface = instanceP1.isOnSurface;
-            //sDebug.Log("confidence "+confidence);
+            //Debug.Log("confidence "+confidence);
         }
     }
 
@@ -77,8 +74,6 @@ public class GestureDetection : MonoBehaviour {
         {
             isOpenedinco = true;
         }
-      
-
         if (isDetection == false)
         {
 
@@ -99,7 +94,6 @@ public class GestureDetection : MonoBehaviour {
     IEnumerator waitOnZeroConf(float time)
     {
         //Debug.Log("In Enumerator");
-
         yield return new WaitForSeconds(time);
         //Debug.Log("Coroutene stopped");
         if(!isOpenedinco)

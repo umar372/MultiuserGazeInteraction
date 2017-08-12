@@ -52,6 +52,8 @@ public class GazeListner : MonoBehaviour {
     public bool isOnSurface;
 
 
+    int failed_count_secs = 0;
+
 
     GazeData.GazeData2D data_ = new GazeData.GazeData2D();
 
@@ -80,22 +82,15 @@ public class GazeListner : MonoBehaviour {
                         confidenceText.text = "conf " + confidence;
                         isOnSurface = (bool)itemData["gaze_on_srf"][0]["on_srf"];
                         isOneSurface.text = "IsOnSurf " + (bool)isOneSurface;
-
-
                     }
                 }
-
-                
             }
-            
-
-
         }
     }
+
     // Use this for initialization
     void Start () {
-
-        boolAgainBlink = true;
+        failed_count_secs = 0;
         Debug.Log("Start a request thread.");
         client_thread_ = new Thread(NetMQClient);
         client_thread_.Start();
@@ -105,58 +100,9 @@ public class GazeListner : MonoBehaviour {
 	void Update () {
         get_transform();
 
-        if (confidence >=0.91f && isOnSurface)
-        {
-            isDetectGesture = true;
-            timer = 0f;
-        }
-
-      //  BlinkDetect();
-
     }
 
-    void BlinkDetect()
-    {
-        if (isDetectGesture == true)
-        {
-            if (confidence < 0.5f)
-            {
-                isDetectGesture = false;
-                startedDetection = true;
-            }
-        }
-        
-        if (startedDetection)
-        {
-            timer = timer + Time.deltaTime;
-            Debug.Log("In Timer "+timer);
-
-            if (timer > 0.15f)
-            {
-                Debug.Log("More than 500");
-                
-                if (confidence >= 0.9f)
-                {
-                    Debug.Log("Blink detected");
-                    blinkDetected.text = "yes";
-                    startedDetection = false;
-                    if (onBlinkHappen != null)
-                        onBlinkHappen.Invoke(xpos,ypos);
-                    timer = 0;
-
-                }
-            }
-            else if(confidence ==1f){
-                Debug.Log("Out Timer");
-
-                startedDetection = false;
-                blinkDetected.text = "no";
-                timer = 0f;
-
-            }
-        }
-        
-    }
+   
 
 
     void NetMQClient()
@@ -182,10 +128,10 @@ public class GazeListner : MonoBehaviour {
             // 
             var subscriberSocket = new SubscriberSocket(IPHeader + subport);
             subscriberSocket.Subscribe(ID);
-            //subscriberSocket.Subscribe("blinks");
+            subscriberSocket.Subscribe("fixation");
 
             var msg = new NetMQMessage();
-            while (is_connected && stop_thread_ == false)
+            while ((is_connected || failed_count_secs <20) && stop_thread_ == false)
             {
                // Debug.Log("Receive a multipart message.");
                 is_connected = subscriberSocket.TryReceiveMultipartMessage(timeout, ref (msg));
@@ -202,7 +148,7 @@ public class GazeListner : MonoBehaviour {
                             itemData = JsonMapper.ToObject(mmap.ToString());
 
                         }
-                        ///Debug.Log(message);
+                        Debug.Log(message);
                     }
                     catch
                     {
@@ -213,6 +159,7 @@ public class GazeListner : MonoBehaviour {
                 {
                     Debug.Log("Failed to receive a message.");
                     Thread.Sleep(1000);
+                    failed_count_secs += 1;
                 }
             }
             subscriberSocket.Close();
@@ -226,7 +173,9 @@ public class GazeListner : MonoBehaviour {
         // https://github.com/zeromq/netmq/issues/526
         Debug.Log("ContextTerminate.");
         NetMQConfig.ContextTerminate();
+
     }
+
 
 
     void OnApplicationQuit()

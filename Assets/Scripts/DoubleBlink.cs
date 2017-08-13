@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class DoubleBlink : MonoBehaviour
 {
-
     double xPos = -1;
     double yPos = -1;
     float confidence = -1;
@@ -162,6 +162,5 @@ public class DoubleBlink : MonoBehaviour
             isTotalWait = false;
             Debug.Log("No Double Blink Detected");
         }
-
     }
 }

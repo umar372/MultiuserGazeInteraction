@@ -32,7 +32,7 @@ public class GazeListner : MonoBehaviour {
     public delegate void DwellBlinkDelegate(double posX, double posY);
     public event DwellBlinkDelegate onBlinkHappen;
 
-    private JsonData itemData;
+    public JsonData itemData;
     public Text normPosText,confidenceText,isOneSurface,blinkDetected;
 
     Thread client_thread_;
@@ -128,7 +128,7 @@ public class GazeListner : MonoBehaviour {
             // 
             var subscriberSocket = new SubscriberSocket(IPHeader + subport);
             subscriberSocket.Subscribe(ID);
-            subscriberSocket.Subscribe("fixation");
+            subscriberSocket.Subscribe("fixations");
 
             var msg = new NetMQMessage();
             while ((is_connected || failed_count_secs <20) && stop_thread_ == false)

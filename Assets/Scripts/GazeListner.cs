@@ -148,7 +148,7 @@ public class GazeListner : MonoBehaviour {
                             itemData = JsonMapper.ToObject(mmap.ToString());
 
                         }
-                        Debug.Log(message);
+                        //Debug.Log(message);
                     }
                     catch
                     {

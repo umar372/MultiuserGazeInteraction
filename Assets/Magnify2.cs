@@ -19,8 +19,7 @@ public class Magnify2 : MonoBehaviour
 	{
 		createMagnifyGlass ();
         gazePosition = new Vector3(0f, 0f, 0f);
-        xPosLens = lenseFrame.transform.position.x;
-        yPosLense = lenseFrame.transform.position.y;
+      
 
     }
 
@@ -81,7 +80,7 @@ public class Magnify2 : MonoBehaviour
 	// Following method sets border of MagnifyGlass
 	private void createBordersForMagniyGlass()
 	{
-		magnifyBorders = new GameObject ();
+		magnifyBorders = new GameObject (playerName+"border");
 		LeftBorder = getLine ();
 		LeftBorder.SetVertexCount(2);
 		LeftBorder.SetPosition(0,new Vector3(getWorldPosition(new Vector3(MGOX,MG0Y,0)).x,getWorldPosition(new Vector3(MGOX,MG0Y,0)).y-0.1f,-1));

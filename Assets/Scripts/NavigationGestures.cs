@@ -38,10 +38,10 @@ public class NavigationGestures : MonoBehaviour {
             yPosLens = lensFrame.transform.position.y;
         }
       
-        gazeX = glPlayer1.xpos * Screen.width;
-        gazeY = glPlayer1.ypos * Screen.height;
+		gazeX = glPlayer1.xpos * Screen.width;
+		gazeY = glPlayer1.ypos * Screen.height;
         gazeNormalized = new Vector3((float)gazeX,(float)gazeY,0f);
-        getWorldPosition(gazeNormalized);
+		gazeNormalized = getWorldPosition(gazeNormalized);
 
         DetectFixationPattern();
 

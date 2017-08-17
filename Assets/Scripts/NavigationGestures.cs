@@ -60,11 +60,11 @@ public class NavigationGestures : MonoBehaviour {
 	}
 
     void DetectFixationPattern(){
-        Debug.Log("Lense Position xPos => " + xPosLens+ "  yPos => " + yPosLens);
-        Debug.Log("Gaze Position xPos => " + gazeNormalized.x+ "  yPos => " + gazeNormalized.y);
+        //Debug.Log("Lense Position xPos => " + xPosLens+ "  yPos => " + yPosLens);
+        //Debug.Log("Gaze Position xPos => " + gazeNormalized.x+ "  yPos => " + gazeNormalized.y);
 
-        leftArea = new Vector4(xPosLens - 1.2f, xPosLens - 0.8f, yPosLens - 1.2f, yPosLens + 1.2f);
-        rightArea = new Vector4(xPosLens + 0.8f, xPosLens - 1.2f, yPosLens - 1.2f, yPosLens + 1.2f);
+        leftArea = new Vector4(xPosLens - 3.5f, xPosLens - 2.5f, yPosLens - 3.5f, yPosLens + 3.5f);
+        rightArea = new Vector4(xPosLens + 2.5f, xPosLens + 3.5f, yPosLens - 3.5f, yPosLens + 3.5f);
         topArea = new Vector4(xPosLens - 1.2f, xPosLens + 1.2f, yPosLens + 0.8f, yPosLens + 1.2f);
         bottomArea = new Vector4 (xPosLens - 1.2f, xPosLens + 1.2f, yPosLens - 0.8f, yPosLens - 1.2f);
 
@@ -112,7 +112,8 @@ public class NavigationGestures : MonoBehaviour {
     {
         if (isWaitForFixation)
         {
-            
+            Debug.Log("Waiting for fixation ------- ");
+
             timer += Time.deltaTime;
             if (detectBorder(endingFix) && timer < 0.8f)
             {
@@ -140,6 +141,7 @@ public class NavigationGestures : MonoBehaviour {
 
     bool detectBorder(Vector4 border)
     {
+        Debug.Log("Border x Pos  ==>" + border.x + "Gaze x Position ===> " + gazeNormalized.x);
         if(border.x >= gazeNormalized.x && border.y <= gazeNormalized.x && 
             border.z >= gazeNormalized.y && border.w <= gazeNormalized.y )
         {
@@ -150,10 +152,7 @@ public class NavigationGestures : MonoBehaviour {
 
     void LockLens()
     {
-       // if(blink)
-       // {
-         //   selectionMode = true;
-       // }
+       
     }
 
     public Vector3 getWorldPosition(Vector3 screenPos)
@@ -170,7 +169,7 @@ public class NavigationGestures : MonoBehaviour {
             worldPos.x *= -1;
             worldPos.y *= -1;
         }
-        Debug.Log("World Position " + worldPos);
+        //Debug.Log("World Position " + worldPos);
         return worldPos;
     }
 

@@ -141,7 +141,7 @@ public class Magnify2 : MonoBehaviour
 			worldPos.x *= -1;
 			worldPos.y *= -1;
 		}
-        Debug.Log("World Position "+worldPos);
+       // Debug.Log("World Position "+worldPos);
 		return worldPos;
 	}
 }

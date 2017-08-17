@@ -10,74 +10,106 @@ using UnityEngine.UI;
 using LitJson;
 
 
+namespace GazeData
+{
 
+    [Serializable]
+    public class GazeData2D_P1
+    {
+
+        public string topic = "";
+        public double timestamp = 0.0;
+        public double confidence = -1.0;
+        public bool on_srf = false;
+        public double[] norm_pos = new double[] { 0.0, 0.0 };
+
+    }
+}
 
 
 public class GazeListner2 : MonoBehaviour
 {
 
-    private JsonData itemData;
-    public Text normPosText, confidenceText, isOneSurface;
+    public static GazeListner2 instance;
+    public delegate void DwellBlinkDelegate(double posX, double posY);
+    public event DwellBlinkDelegate onBlinkHappen;
 
-    Thread client_thread2_;
-    private System.Object thisLock_ = new System.Object();
+    public JsonData itemData;
+    public Text normPosText, confidenceText, isOneSurface, blinkDetected;
+
+    Thread client_thread_P2;
+    private System.Object thisLock_P2 = new System.Object();
     bool stop_thread_ = false;
     public string IP;
     public string PORT;
     public string ID;
 
-    GazeData.GazeData2D data_ = new GazeData.GazeData2D();
+    bool isDetectGesture, startedDetection, boolAgainBlink;
+    float timer;
+    int numOfBlinks;
+
+    public double xpos = -1;
+    public double ypos = -1;
+    public float confidence = -1;
+    public bool isOnSurface;
+
+
+    int failed_count_secs = 0;
+
+
+    GazeData.GazeData2D_P1 data_ = new GazeData.GazeData2D_P1();
+
 
     public void get_transform()
     {
-        lock (thisLock_)
+        lock (thisLock_P2)
         {
             if (itemData != null)
             {
-                double xpos = -1;
-                double ypos = -1;
-                if (itemData["gaze_on_srf"].Count > 0)
+
+                if (itemData.Keys.Contains("gaze_on_srf"))
                 {
-                    if (itemData["gaze_on_srf"][0]["norm_pos"].Count > 0)
+                    if (itemData["gaze_on_srf"].Count > 0)
                     {
+
                         xpos = Math.Round((double)itemData["gaze_on_srf"][0]["norm_pos"][0], 2);
                         ypos = Math.Round((double)itemData["gaze_on_srf"][0]["norm_pos"][1], 2);
+                        normPosText.text = "Norm " + xpos + " , " + ypos;
+
+                    }
+                    if (itemData["gaze_on_srf"].Count > 0)
+                    {
+                        string conf = itemData["gaze_on_srf"][0]["confidence"].ToString();
+                        confidence = float.Parse(conf);
+                        confidenceText.text = "conf " + confidence;
+                        isOnSurface = (bool)itemData["gaze_on_srf"][0]["on_srf"];
+                        isOneSurface.text = "IsOnSurf " + (bool)isOneSurface;
                     }
                 }
-                if (itemData["gaze_on_srf"].Count > 0)
-                {
-                    isOneSurface.text = "IsOnSurd " + (bool)itemData["gaze_on_srf"][0]["on_srf"];
-                    // confidenceText.text = "confid  "+(double)itemData["gaze_on_srf"][0]["confidence"];
-
-                }
-
-
-                normPosText.text = "Norm " + xpos + " , " + ypos;//["norm_pos"][0] + " , " + itemData["gaze_on_srf"]["norm_pos"][0];
             }
-
-
         }
     }
+
     // Use this for initialization
     void Start()
     {
-
-
+        failed_count_secs = 0;
         Debug.Log("Start a request thread.");
-        client_thread2_ = new Thread(NetMQClient);
-        client_thread2_.Start();
+        client_thread_P2 = new Thread(NetMQClientP2);
+        client_thread_P2.Start();
     }
 
     // Update is called once per frame
     void Update()
     {
         get_transform();
+
     }
 
 
 
 
-    void NetMQClient()
+    void NetMQClientP2()
     {
         string IPHeader = ">tcp://" + IP + ":";
         var timeout = new System.TimeSpan(0, 0, 1); //1sec
@@ -100,11 +132,12 @@ public class GazeListner2 : MonoBehaviour
             // 
             var subscriberSocket = new SubscriberSocket(IPHeader + subport);
             subscriberSocket.Subscribe(ID);
+            subscriberSocket.Subscribe("fixations");
 
             var msg = new NetMQMessage();
-            while (is_connected && stop_thread_ == false)
+            while ((is_connected || failed_count_secs < 20) && stop_thread_ == false)
             {
-                Debug.Log("Receive a multipart message.");
+                // Debug.Log("Receive a multipart message.");
                 is_connected = subscriberSocket.TryReceiveMultipartMessage(timeout, ref (msg));
                 if (is_connected)
                 {
@@ -114,13 +147,12 @@ public class GazeListner2 : MonoBehaviour
                         //Debug.Log(msg[0].ConvertToString());
                         var message = MsgPack.Unpacking.UnpackObject(msg[1].ToByteArray());
                         MsgPack.MessagePackObject mmap = message.Value;
-                        lock (thisLock_)
+                        lock (thisLock_P2)
                         {
                             itemData = JsonMapper.ToObject(mmap.ToString());
 
-                            //data_ = JsonUtility.FromJson<GazeData.GazeData2D>(mmap.ToString());
                         }
-                        Debug.Log(message);
+                        Debug.Log("p2"+message);
                     }
                     catch
                     {
@@ -131,6 +163,7 @@ public class GazeListner2 : MonoBehaviour
                 {
                     Debug.Log("Failed to receive a message.");
                     Thread.Sleep(1000);
+                    failed_count_secs += 1;
                 }
             }
             subscriberSocket.Close();
@@ -144,13 +177,15 @@ public class GazeListner2 : MonoBehaviour
         // https://github.com/zeromq/netmq/issues/526
         Debug.Log("ContextTerminate.");
         NetMQConfig.ContextTerminate();
+
     }
+
 
 
     void OnApplicationQuit()
     {
-        lock (thisLock_) stop_thread_ = true;
-        client_thread2_.Join();
+        lock (thisLock_P2) stop_thread_ = true;
+        client_thread_P2.Join();
         Debug.Log("Quit the thread.");
     }
 }

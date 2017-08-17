@@ -35,8 +35,8 @@ public class GazeListner : MonoBehaviour {
     public JsonData itemData;
     public Text normPosText,confidenceText,isOneSurface,blinkDetected;
 
-    Thread client_thread_;
-    private System.Object thisLock_ = new System.Object();
+    Thread client_thread_P1;
+    private System.Object thisLock_P1 = new System.Object();
     bool stop_thread_ = false;
     public string IP;
     public string PORT;
@@ -60,7 +60,7 @@ public class GazeListner : MonoBehaviour {
  
     public void get_transform()
     {
-        lock (thisLock_)
+        lock (thisLock_P1)
         {
             if (itemData != null)
             {
@@ -92,8 +92,8 @@ public class GazeListner : MonoBehaviour {
     void Start () {
         failed_count_secs = 0;
         Debug.Log("Start a request thread.");
-        client_thread_ = new Thread(NetMQClient);
-        client_thread_.Start();
+        client_thread_P1 = new Thread(NetMQClientP1);
+        client_thread_P1.Start();
     }
 	
 	// Update is called once per frame
@@ -105,7 +105,7 @@ public class GazeListner : MonoBehaviour {
    
 
 
-    void NetMQClient()
+    void NetMQClientP1()
     {
         string IPHeader = ">tcp://" + IP + ":";
         var timeout = new System.TimeSpan(0, 0, 1); //1sec
@@ -143,12 +143,12 @@ public class GazeListner : MonoBehaviour {
                         //Debug.Log(msg[0].ConvertToString());
                         var message = MsgPack.Unpacking.UnpackObject(msg[1].ToByteArray());
                         MsgPack.MessagePackObject mmap = message.Value;
-                        lock (thisLock_)
+                        lock (thisLock_P1)
                         {
                             itemData = JsonMapper.ToObject(mmap.ToString());
 
                         }
-                        //Debug.Log(message);
+                        Debug.Log("p1"+message);
                     }
                     catch
                     {
@@ -180,8 +180,8 @@ public class GazeListner : MonoBehaviour {
 
     void OnApplicationQuit()
     {
-        lock (thisLock_) stop_thread_ = true;
-        client_thread_.Join();
+        lock (thisLock_P1) stop_thread_ = true;
+        client_thread_P1.Join();
         Debug.Log("Quit the thread.");
     }
 }

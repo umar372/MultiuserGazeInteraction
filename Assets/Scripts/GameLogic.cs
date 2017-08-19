@@ -10,8 +10,8 @@ public class GameLogic : MonoBehaviour {
     double xPos, yPos;
 	// Use this for initialization
 	void Start () {
-        gazeListner.onBlinkHappen += (xPos, yPos) =>
-        {
+        //gazeListner.onBlinkHappen += (xPos, yPos) =>
+        //{
             if (xPos >= 0 && xPos <= 0.25 && yPos >= 0 && yPos <= 0.33)
             {
                 Transform cover = cards[0].transform.GetChild(0);
@@ -88,7 +88,7 @@ public class GameLogic : MonoBehaviour {
                 cover.gameObject.SetActive(false);
             }
 
-        };
+       // };
 	}
 
     IEnumerator reloadCover(Transform cover)

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GestureDetection : MonoBehaviour {
 
+    public delegate void BlinkDelegate(double posX, double posY);
+    public event BlinkDelegate onBlinkHappen;
     double xPos=-1;
     double yPos=-1;
     float confidence=-1;
@@ -81,6 +83,10 @@ public class GestureDetection : MonoBehaviour {
             {
                 isCheckEyeOpen = false;
                 Debug.Log("Blink Gesture Detected");
+                if (onBlinkHappen != null)
+                {
+                    onBlinkHappen.Invoke(xPos, yPos);
+                }
             }
             else { 
                

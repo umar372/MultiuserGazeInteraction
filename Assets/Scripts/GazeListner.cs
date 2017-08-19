@@ -29,8 +29,7 @@ namespace GazeData {
 public class GazeListner : MonoBehaviour {
 
     public static GazeListner instance;
-    public delegate void DwellBlinkDelegate(double posX, double posY);
-    public event DwellBlinkDelegate onBlinkHappen;
+   
 
     public JsonData itemData;
     public Text normPosText,confidenceText,isOneSurface,blinkDetected;
@@ -108,7 +107,7 @@ public class GazeListner : MonoBehaviour {
     void NetMQClientP1()
     {
         string IPHeader = ">tcp://" + IP + ":";
-        var timeout = new System.TimeSpan(0, 0, 1); //1sec
+        var timeout_p1 = new System.TimeSpan(0, 0, 1); //1sec
 
         // Necessary to handle this NetMQ issue on Unity editor
         // https://github.com/zeromq/netmq/issues/526
@@ -116,32 +115,37 @@ public class GazeListner : MonoBehaviour {
         NetMQConfig.ManualTerminationTakeOver();
         NetMQConfig.ContextCreate(true);
 
-        string subport;
+        string subport_p1;
         Debug.Log("Connect to the server: " + IPHeader + PORT + ".");
         var requestSocket = new RequestSocket(IPHeader + PORT);
         requestSocket.SendFrame("SUB_PORT");
-        bool is_connected = requestSocket.TryReceiveFrameString(timeout, out subport);
+        bool is_connected = requestSocket.TryReceiveFrameString(timeout_p1, out subport_p1);
         requestSocket.Close();
 
         if (is_connected)
         {
             // 
-            var subscriberSocket = new SubscriberSocket(IPHeader + subport);
-            subscriberSocket.Subscribe(ID);
-            subscriberSocket.Subscribe("fixations");
+            var subscriberSocket_p1 = new SubscriberSocket(IPHeader + subport_p1);
+            subscriberSocket_p1.Subscribe(ID);
+            //subscriberSocket_p1.Subscribe("fixations");
 
-            var msg = new NetMQMessage();
+            var subscriberSocket_p2 = new SubscriberSocket(">tcp://192.168.25.50" + subport_p1);
+            subscriberSocket_p1.Subscribe(ID);
+            //subscriberSocket_p1.Subscribe("fixations");
+
+
+            var msg_p1 = new NetMQMessage();
             while ((is_connected || failed_count_secs <20) && stop_thread_ == false)
             {
                // Debug.Log("Receive a multipart message.");
-                is_connected = subscriberSocket.TryReceiveMultipartMessage(timeout, ref (msg));
+                is_connected = subscriberSocket_p1.TryReceiveMultipartMessage(timeout_p1, ref (msg_p1));
                 if (is_connected)
                 {
                     //Debug.Log("Unpack a received multipart message.");
                     try
                     {
                         //Debug.Log(msg[0].ConvertToString());
-                        var message = MsgPack.Unpacking.UnpackObject(msg[1].ToByteArray());
+                        var message = MsgPack.Unpacking.UnpackObject(msg_p1[1].ToByteArray());
                         MsgPack.MessagePackObject mmap = message.Value;
                         lock (thisLock_P1)
                         {
@@ -162,7 +166,7 @@ public class GazeListner : MonoBehaviour {
                     failed_count_secs += 1;
                 }
             }
-            subscriberSocket.Close();
+            subscriberSocket_p1.Close();
         }
         else
         {

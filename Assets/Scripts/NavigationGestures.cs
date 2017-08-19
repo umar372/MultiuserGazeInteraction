@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class NavigationGestures : MonoBehaviour {
 
+    public GestureDetection eblink; //refers to the blink
+    public DoubleBlink edblink;
     double gazeX = -1;
     double gazeY = -1;
     Vector3 gazeNormalized;
     public GazeListner glPlayer1;
     public bool magnifyLensActivated; //refers to the double blink
-    bool blink; //refers to the blink
     bool selectionMode;
     bool isWaitForFixation;
     public GameObject lensFrame;
@@ -28,6 +29,11 @@ public class NavigationGestures : MonoBehaviour {
         isWaitForFixation = false;
         selectionMode = false;
         magnifyLensActivated = false;
+        edblink.onDoubleBlinkHappen += (double x, double y) => 
+        {
+            if(magnifyLensActivated) {magnifyLensActivated = false; selectionMode = false;} 
+            else {magnifyLensActivated = true;}};
+        
 	}
 	
 	// Update is called once per frame
@@ -36,6 +42,9 @@ public class NavigationGestures : MonoBehaviour {
 
         if (magnifyLensActivated)
         {
+            eblink.onBlinkHappen += (double x, double y) => 
+            {selectionMode = true;};
+
             if (lensFrame == null)
             {
                 lensFrame = GameObject.Find("player1border");
@@ -55,17 +64,12 @@ public class NavigationGestures : MonoBehaviour {
                 DetectFixationPattern();
                 if(isWaitForFixation)
                 {
-                    Debug.Log("gg");
                     WaitForFixationComplete(endFix);
                 }
             }
-            else
-            {
-                LockLens();
-            }
         }
         else
-        {
+        {   Debug.Log("ml off");
             selectionMode = false;
         }
 
@@ -75,13 +79,12 @@ public class NavigationGestures : MonoBehaviour {
 
         if(!isWaitForFixation)
         {
-            Debug.Log("Gaze Position xPos => " + gazeNormalized.x+ "  yPos => " + gazeNormalized.y);
-
+            //Debug.Log("Gaze Position xPos => " + gazeNormalized.x+ "  yPos => " + gazeNormalized.y);
+            
             leftArea = new Vector4(xPosLens - 3.3f, xPosLens - 2.8f, yPosLens - 3.3f, yPosLens + 3.3f);
             rightArea = new Vector4(xPosLens + 2.8f, xPosLens + 3.3f, yPosLens - 3.3f, yPosLens + 3.3f);
             topArea = new Vector4(xPosLens - 3.3f, xPosLens + 3.3f, yPosLens + 2.8f, yPosLens + 3.3f);
             bottomArea = new Vector4 (xPosLens - 3.3f, xPosLens + 3.3f, yPosLens - 2.8f, yPosLens - 3.3f);
-            //Debug.Log(isWaitForFixation);
 
             if(detectBorder(leftArea))
             {
@@ -154,13 +157,6 @@ public class NavigationGestures : MonoBehaviour {
         return false;
     }
 
-    void LockLens()
-    {
-       if(blink)
-       {
-           selectionMode = true;
-       }
-    }
 
     public Vector3 getWorldPosition(Vector3 screenPos)
     {

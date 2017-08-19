@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class DoubleBlink : MonoBehaviour
 {
+    public delegate void DoubleBlinkDelegate(double posX, double posY);
+    public event DoubleBlinkDelegate onDoubleBlinkHappen;
     double xPos = -1;
     double yPos = -1;
     float confidence = -1;
@@ -61,14 +63,14 @@ public class DoubleBlink : MonoBehaviour
                 dTimer = 0f;
                 BlinkCount = 0;
                 Debug.Log("Gesture detected");
+                if (onDoubleBlinkHappen != null)
+                {
+                    onDoubleBlinkHappen.Invoke(xPos, yPos);
+                }
             }
             
         }
-        /*if (BlinkCount == 1 && !isTotalWait)
-        {
-            StartCoroutine(waitforDBlink(0.25f));
-            isTotalWait = true;
-        }*/
+    
     }
 
 

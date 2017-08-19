@@ -9,16 +9,17 @@ public class NavigationGestures : MonoBehaviour {
     double gazeY = -1;
     Vector3 gazeNormalized;
     public GazeListner glPlayer1;
-    public bool magnifyLensActivated = false; //refers to the double blink
+    public bool magnifyLensActivated; //refers to the double blink
+    bool blink; //refers to the blink
     bool selectionMode;
+    bool isWaitForFixation;
     public GameObject lensFrame;
     float xPosLens = -1;
     float yPosLens = -1;
     Vector4 leftArea, rightArea, topArea, bottomArea;
     Vector4 endFix;
-    bool isWaitForFixation;
     float timer;
-   	bool blink; //refers to the blink
+
 
     // Use this for initialization
     void Start () {
@@ -26,6 +27,7 @@ public class NavigationGestures : MonoBehaviour {
         gazeNormalized = new Vector3(0f,0f,0f);
         isWaitForFixation = false;
         selectionMode = false;
+        magnifyLensActivated = false;
 	}
 	
 	// Update is called once per frame
@@ -62,21 +64,25 @@ public class NavigationGestures : MonoBehaviour {
                 LockLens();
             }
         }
+        else
+        {
+            selectionMode = false;
+        }
 
 	}
 
     void DetectFixationPattern(){
-     
-        Debug.Log("Gaze Position xPos => " + gazeNormalized.x+ "  yPos => " + gazeNormalized.y);
-
-        leftArea = new Vector4(xPosLens - 3.3f, xPosLens - 2.8f, yPosLens - 3.3f, yPosLens + 3.3f);
-        rightArea = new Vector4(xPosLens + 2.8f, xPosLens + 3.3f, yPosLens - 3.3f, yPosLens + 3.3f);
-        topArea = new Vector4(xPosLens - 3.3f, xPosLens + 3.3f, yPosLens + 2.8f, yPosLens + 3.3f);
-        bottomArea = new Vector4 (xPosLens - 3.3f, xPosLens + 3.3f, yPosLens - 2.8f, yPosLens - 3.3f);
-		//Debug.Log(isWaitForFixation);
 
         if(!isWaitForFixation)
         {
+            Debug.Log("Gaze Position xPos => " + gazeNormalized.x+ "  yPos => " + gazeNormalized.y);
+
+            leftArea = new Vector4(xPosLens - 3.3f, xPosLens - 2.8f, yPosLens - 3.3f, yPosLens + 3.3f);
+            rightArea = new Vector4(xPosLens + 2.8f, xPosLens + 3.3f, yPosLens - 3.3f, yPosLens + 3.3f);
+            topArea = new Vector4(xPosLens - 3.3f, xPosLens + 3.3f, yPosLens + 2.8f, yPosLens + 3.3f);
+            bottomArea = new Vector4 (xPosLens - 3.3f, xPosLens + 3.3f, yPosLens - 2.8f, yPosLens - 3.3f);
+            //Debug.Log(isWaitForFixation);
+
             if(detectBorder(leftArea))
             {
                 Debug.Log("Comees Left");

@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GestureDetection : MonoBehaviour {
+public class BlinkDetection : MonoBehaviour
+{
 
-    public delegate void BlinkDelegate(double posX, double posY);
+    public delegate void BlinkDelegate(double posX, double posY,string playerName);
     public event BlinkDelegate onBlinkHappen;
 
-    double xPos=-1;
-    double yPos=-1;
-    float confidence=-1;
+    double xPos = -1;
+    double yPos = -1;
+    float confidence = -1;
     bool isGazeOnSurface = false;
-    public GazeListner instanceP1;
+    public PlayerData instanceP1;
 
-    bool isDetection,isOpenedinco;
-    bool isCheckEyeOpen,isCoRoutineStarted;
+    bool isDetection, isOpenedinco;
+    bool isCheckEyeOpen, isCoRoutineStarted;
 
     IEnumerator m_corot;
-    
-	// Use this for initialization
-	/*void Start () {
+
+    // Use this for initialization
+    void Start () {
         isCoRoutineStarted = false;
         isOpenedinco = false;
 	}
@@ -83,7 +84,7 @@ public class GestureDetection : MonoBehaviour {
                 Debug.Log("Blink Gesture Detected");
                 if (onBlinkHappen != null)
                 {
-                    onBlinkHappen.Invoke(xPos, yPos);
+                    onBlinkHappen.Invoke(xPos, yPos,instanceP1.playerName);
                 }
             }
             else { 
@@ -104,5 +105,5 @@ public class GestureDetection : MonoBehaviour {
             isCheckEyeOpen = true;
         isCoRoutineStarted = false;
 
-    }*/
+    }
 }

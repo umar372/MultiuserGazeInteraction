@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class NavigationGestures : MonoBehaviour {
+public class NavigationGestures : MonoBehaviour
+{
 
     public GestureDetection eblink; //refers to the blink
     public DoubleBlink edblink;
@@ -23,7 +24,7 @@ public class NavigationGestures : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+  /*  void Start () {
         lensFrame = GameObject.Find("player1border");
         gazeNormalized = new Vector3(0f,0f,0f);
         isWaitForFixation = false;
@@ -54,8 +55,8 @@ public class NavigationGestures : MonoBehaviour {
                 yPosLens = lensFrame.transform.position.y;
             }
         
-            gazeX = glPlayer1.xpos * Screen.width;
-            gazeY = glPlayer1.ypos * Screen.height;
+            gazeX = glPlayer1.xpos1 * Screen.width;
+            gazeY = glPlayer1.ypos1 * Screen.height;
             gazeNormalized = new Vector3((float)gazeX,(float)gazeY,0f);
             gazeNormalized = getWorldPosition(gazeNormalized);
 
@@ -176,5 +177,7 @@ public class NavigationGestures : MonoBehaviour {
         return worldPos;
     }
 
-
+    */
 }
+
+  

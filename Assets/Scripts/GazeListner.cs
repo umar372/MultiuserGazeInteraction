@@ -102,16 +102,16 @@ public class GazeListner : MonoBehaviour {
 
                         xpos_1 = Math.Round((double)itemData_1["gaze_on_srf"][0]["norm_pos"][0], 2);
                         ypos_1 = Math.Round((double)itemData_1["gaze_on_srf"][0]["norm_pos"][1], 2);
-                        normPosText.text = "Norm " + xpos_1 + " , " + ypos_1;
+                        //normPosText.text = "Norm " + xpos_1 + " , " + ypos_1;
 
                     }
                     if (itemData_1["gaze_on_srf"].Count > 0)
                     {
                         string conf = itemData_1["gaze_on_srf"][0]["confidence"].ToString();
                         confidence_1 = float.Parse(conf);
-                        confidenceText.text = "conf " + confidence_1;
+                        //confidenceText.text = "conf " + confidence_1;
                         isOnSurface_1 = (bool)itemData_1["gaze_on_srf"][0]["on_srf"];
-                        isOneSurface.text = "IsOnSurf " + (bool)isOneSurface;
+                       // isOneSurface.text = "IsOnSurf " + (bool)isOneSurface;
                     }
                 }
             }
@@ -133,16 +133,16 @@ public class GazeListner : MonoBehaviour {
 
                         xpos_2 = Math.Round((double)itemData_2["gaze_on_srf"][0]["norm_pos"][0], 2);
                         ypos_2 = Math.Round((double)itemData_2["gaze_on_srf"][0]["norm_pos"][1], 2);
-                        normPosText.text = "Norm " + xpos_2 + " , " + ypos_2;
+                       // normPosText.text = "Norm " + xpos_2 + " , " + ypos_2;
 
                     }
                     if (itemData_2["gaze_on_srf"].Count > 0)
                     {
                         string conf = itemData_2["gaze_on_srf"][0]["confidence"].ToString();
                         confidence_2 = float.Parse(conf);
-                        confidenceText.text = "conf " + confidence_2;
+                        //confidenceText.text = "conf " + confidence_2;
                         isOnSurface_2 = (bool)itemData_2["gaze_on_srf"][0]["on_srf"];
-                        isOneSurface.text = "IsOnSurf " + (bool)isOneSurface;
+                       // isOneSurface.text = "IsOnSurf " + (bool)isOneSurface;
                     }
                 }
             }
@@ -162,12 +162,12 @@ public class GazeListner : MonoBehaviour {
         get_Data_Player1();
         get_Data_Player2();
 
-        if (isOnSurface_1)
+        //if (isOnSurface_1)
         {
             xPosSumP1 += xpos_1;
             yPosSumP1 += ypos_1;
             numOfSumsP1 += 1;
-            if (numOfSumsP1 == 10)
+            if (numOfSumsP1 == 3)
             {
                 xposP1 = xPosSumP1 / numOfSumsP1;
                 yposP1 = yPosSumP1 / numOfSumsP1;
@@ -177,12 +177,12 @@ public class GazeListner : MonoBehaviour {
             }
 
         }
-        if (isOnSurface_2)
+       // if (isOnSurface_2)
         {
             xPosSumP2 += xpos_2;
             yPosSumP2 += ypos_2;
-            numOfSumsP1 += 1;
-            if (numOfSumsP2 == 10)
+            numOfSumsP2 += 1;
+            if (numOfSumsP2 == 3)
             {
                 xposP2 = xPosSumP2 / numOfSumsP2;
                 yposP2 = yPosSumP2 / numOfSumsP2;

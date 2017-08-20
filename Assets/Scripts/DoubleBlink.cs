@@ -21,11 +21,7 @@ public class DoubleBlink : MonoBehaviour
     float dTimer;
 
     IEnumerator m_corot;
-    void Awake()
-    {
-        //instanceP1 = GazeListner.instance;
-    }
-    // Use this for initialization
+   /*
     void Start()
     {
         isCoRoutineStarted = false;
@@ -164,5 +160,5 @@ public class DoubleBlink : MonoBehaviour
             isTotalWait = false;
             Debug.Log("No Double Blink Detected");
         }
-    }
+    }*/
 }

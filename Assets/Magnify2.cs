@@ -14,39 +14,50 @@ public class Magnify2 : MonoBehaviour
     public string playerName;
     public GameObject lenseFrame;
     float xPosLens, yPosLense;
+	bool onScreen;
 
 	void Start () 
 	{
 		createMagnifyGlass ();
         gazePosition = new Vector3(0f, 0f, 0f);
-      
-
+		onScreen = false;
     }
 
     void Update () 
 	{
         if(playerInstance!= null)
-            gazePosition = new Vector3((float)playerInstance.xpos*Screen.width,(float)playerInstance.ypos*Screen.height,0f);
+		{
+			if(onScreen)
+			{
+				gazePosition = new Vector3((float)playerInstance.xpos*Screen.width,(float)playerInstance.ypos*Screen.height,0f);
+			}
+			else
+			{
+				gazePosition = new Vector3((float)(-100.0)*Screen.width,(float)(-100.0)*Screen.height,0f);
+			}
 
-        // Following lines set the camera's pixelRect and camera position at mouse position
-        magnifyCamera.pixelRect = new Rect(gazePosition.x - MGWidth / 2.0f, gazePosition.y - MGHeight / 2.0f, MGWidth, MGHeight);
-        if (Input.GetKey(KeyCode.A))
-        {
-            gazePosition = new Vector3(gazePosition.x-2f,gazePosition.y,0f);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            gazePosition = new Vector3(gazePosition.x + 2f, gazePosition.y, 0f);
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            gazePosition = new Vector3(gazePosition.x, gazePosition.y+2f, 0f);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            gazePosition = new Vector3(gazePosition.x , gazePosition.y-2f, 0f);
-        }
-
+		}
+			
+		
+		// Following lines set the camera's pixelRect and camera position at mouse position
+		magnifyCamera.pixelRect = new Rect(gazePosition.x - MGWidth / 2.0f, gazePosition.y - MGHeight / 2.0f, MGWidth, MGHeight);
+		if (Input.GetKey(KeyCode.A))
+		{
+			gazePosition = new Vector3(gazePosition.x-2f,gazePosition.y,0f);
+		}
+		if (Input.GetKey(KeyCode.D))
+		{
+			gazePosition = new Vector3(gazePosition.x + 2f, gazePosition.y, 0f);
+		}
+		if (Input.GetKey(KeyCode.W))
+		{
+			gazePosition = new Vector3(gazePosition.x, gazePosition.y+2f, 0f);
+		}
+		if (Input.GetKey(KeyCode.S))
+		{
+			gazePosition = new Vector3(gazePosition.x , gazePosition.y-2f, 0f);
+		}
+		
         mousePos = getWorldPosition (gazePosition);
 		magnifyCamera.transform.position = mousePos;
 		mousePos.z = 0;
@@ -143,5 +154,15 @@ public class Magnify2 : MonoBehaviour
 		}
        // Debug.Log("World Position "+worldPos);
 		return worldPos;
+	}
+
+	public void setLensOffScreen() 
+	{
+		onScreen = false;
+	}
+
+	public void setLensOnScreen()
+	{
+		onScreen = true;
 	}
 }

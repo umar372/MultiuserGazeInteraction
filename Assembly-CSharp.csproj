@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\NavigationGestures.cs" />
      <Compile Include="Assets\Scripts\PupilListener.cs" />
      <Compile Include="Assets\Scripts\UIScripts\GenerateBoard.cs" />
+     <Compile Include="Assets\Scripts\networkSocketSO.cs" />
      <None Include="Assets\Shaders\Magnification.shader" />
      <None Include="Assets\samplefile.txt" />
  <Reference Include="UnityEngine.UI">

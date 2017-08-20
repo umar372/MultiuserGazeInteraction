@@ -8,8 +8,8 @@ using System.Threading;
 using MsgPack;
 using UnityEngine.UI;
 using LitJson;
-
-
+using System.Net.Sockets;
+using System.Text;
 namespace GazeData {
 
     [Serializable]
@@ -45,8 +45,12 @@ public class GazeListner : MonoBehaviour {
     float timer;
     int numOfBlinks;
 
+    private double xPosInst=-1,yPosInst=-1,xPosSum=0,yPosSum=0;
+    private int numOfSums;
+
     public double xpos = -1;
     public double ypos = -1;
+
     public float confidence= -1;
     public bool isOnSurface;
 
@@ -69,9 +73,9 @@ public class GazeListner : MonoBehaviour {
                     if (itemData["gaze_on_srf"].Count > 0)
                     {
 
-                        xpos = Math.Round((double)itemData["gaze_on_srf"][0]["norm_pos"][0], 2);
-                        ypos = Math.Round((double)itemData["gaze_on_srf"][0]["norm_pos"][1], 2);
-                        normPosText.text = "Norm " + xpos + " , " + ypos;
+                        xPosInst = Math.Round((double)itemData["gaze_on_srf"][0]["norm_pos"][0], 2);
+                        yPosInst = Math.Round((double)itemData["gaze_on_srf"][0]["norm_pos"][1], 2);
+                        normPosText.text = "Norm " + xPosInst + " , " + yPosInst;
 
                     }
                     if (itemData["gaze_on_srf"].Count > 0)
@@ -98,7 +102,22 @@ public class GazeListner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         get_transform();
+        if (isOneSurface)
+        {
+            xPosSum += xPosInst;
+            yPosSum += yPosInst;
+            numOfSums += 1;
+            if (numOfSums == 10)
+            {
+                xpos = xPosSum / numOfSums;
+                ypos = yPosSum / numOfSums;
+                xPosSum = 0;
+                yPosSum = 0;
+                numOfSums = 0;
+            }
 
+
+        }
     }
 
    
@@ -129,9 +148,9 @@ public class GazeListner : MonoBehaviour {
             subscriberSocket_p1.Subscribe(ID);
             //subscriberSocket_p1.Subscribe("fixations");
 
-            var subscriberSocket_p2 = new SubscriberSocket(">tcp://192.168.25.50" + subport_p1);
-            subscriberSocket_p1.Subscribe(ID);
-            //subscriberSocket_p1.Subscribe("fixations");
+            // var subscriberSocket_p2 = new SubscriberSocket(">tcp://192.168.25.50" + subport_p1);
+            // subscriberSocket_p1.Subscribe(ID);
+            // //subscriberSocket_p1.Subscribe("fixations");
 
 
             var msg_p1 = new NetMQMessage();
@@ -152,7 +171,7 @@ public class GazeListner : MonoBehaviour {
                             itemData = JsonMapper.ToObject(mmap.ToString());
 
                         }
-                        Debug.Log("p1"+message);
+                        //Debug.Log("p1"+message);
                     }
                     catch
                     {

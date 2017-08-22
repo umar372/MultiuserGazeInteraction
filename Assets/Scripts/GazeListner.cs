@@ -87,7 +87,10 @@ public class GazeListner : MonoBehaviour {
 
     GazeData.GazeData2D data_ = new GazeData.GazeData2D();
 
- 
+
+     Queue<Vector2> quPlayer1, quPlayer2;
+
+
     public void get_Data_Player1()
     {
         lock (thisLock_P1)
@@ -154,6 +157,9 @@ public class GazeListner : MonoBehaviour {
         Debug.Log("Start a request thread.");
         client_thread_P1 = new Thread(MQClientForPlayers);
         client_thread_P1.Start();
+
+        quPlayer1 = new Queue<Vector2>();
+
     }
 
     // Update is called once per frame
@@ -162,10 +168,33 @@ public class GazeListner : MonoBehaviour {
         get_Data_Player1();
         get_Data_Player2();
 
+        if (quPlayer1.Count < 3)
+        {
+            quPlayer1.Enqueue(new Vector2((float)xpos_1, (float)ypos_1));
+
+        }
+        else {
+            quPlayer1.Enqueue(new Vector2((float)xpos_1, (float)ypos_1));
+            Vector2[] temp = new Vector2[quPlayer1.Count];
+            quPlayer1.CopyTo(temp, 0);
+            xPosSumP1 = 0;
+            yPosSumP1 = 0;
+            for (int i = 0; i < temp.Length; i++)
+            {
+                xPosSumP1 += temp[i].x;
+                xPosSumP2 += temp[i].y;
+
+            }
+            xposP1 = xPosSumP1 / temp.Length;
+            xposP2 = yPosSumP2 / temp.Length;
+            quPlayer1.Dequeue();
+
+        }
+
         //if (isOnSurface_1)
         {
-            xPosSumP1 += xpos_1;
-            yPosSumP1 += ypos_1;
+          /*  xPosSumP1 += xpos_1;
+            yPosSumP1 += ypos_1
             numOfSumsP1 += 1;
             if (numOfSumsP1 == 3)
             {
@@ -175,7 +204,7 @@ public class GazeListner : MonoBehaviour {
                 yPosSumP1 = 0;
                 numOfSumsP1 = 0;
             }
-
+            
         }
        // if (isOnSurface_2)
         {
@@ -189,7 +218,7 @@ public class GazeListner : MonoBehaviour {
                 xPosSumP2 = 0;
                 yPosSumP2 = 0;
                 numOfSumsP2 = 0;
-            }
+            }*/
 
         }
     }
@@ -218,26 +247,26 @@ public class GazeListner : MonoBehaviour {
         bool is_connected_1 = requestSocket_1.TryReceiveFrameString(timeout, out subport_1);
         requestSocket_1.Close();
 
-        var requestSocket_2 = new RequestSocket(IPHeader_2 + PORT_2);
-        requestSocket_2.SendFrame("SUB_PORT");
-        bool is_connected_2 = requestSocket_2.TryReceiveFrameString(timeout, out subport_2);
-        requestSocket_2.Close();
+        //var requestSocket_2 = new RequestSocket(IPHeader_2 + PORT_2);
+        //requestSocket_2.SendFrame("SUB_PORT");
+        bool is_connected_2=true;// = requestSocket_2.TryReceiveFrameString(timeout, out subport_2);
+       // requestSocket_2.Close();
 
-        if (is_connected_1 && is_connected_2)
+        if (is_connected_1 || is_connected_2)
         {
             // 
             var subscriberSocket_1 = new SubscriberSocket(IPHeader_1 + subport_1);
-            var subscriberSocket_2 = new SubscriberSocket(IPHeader_2 + subport_2);
+          //  var subscriberSocket_2 = new SubscriberSocket(IPHeader_2 + subport_2);
             subscriberSocket_1.Subscribe(ID_1);
-            subscriberSocket_2.Subscribe(ID_2);
+           // subscriberSocket_2.Subscribe(ID_2);
 
             var msg_1 = new NetMQMessage();
             var msg_2 = new NetMQMessage();
-            while ((is_connected_1 && is_connected_2 || failed_count_secs <20) && stop_thread_ == false)
+            while ((is_connected_1 || is_connected_2 || failed_count_secs <20) && stop_thread_ == false)
             {
                // Debug.Log("Receive a multipart message.");
                 is_connected_1 = subscriberSocket_1.TryReceiveMultipartMessage(timeout, ref (msg_1));
-                is_connected_2 = subscriberSocket_2.TryReceiveMultipartMessage(timeout, ref (msg_2));
+              //  is_connected_2 = subscriberSocket_2.TryReceiveMultipartMessage(timeout, ref (msg_2));
                 if (is_connected_1 && is_connected_2)
                 {
                     //Debug.Log("Unpack a received multipart message.");
@@ -245,17 +274,17 @@ public class GazeListner : MonoBehaviour {
                     {
                         //Debug.Log(msg[0].ConvertToString());
                         var message_1 = MsgPack.Unpacking.UnpackObject(msg_1[1].ToByteArray());
-                        var message_2 = MsgPack.Unpacking.UnpackObject(msg_2[1].ToByteArray());
+                        //var message_2 = MsgPack.Unpacking.UnpackObject(msg_2[1].ToByteArray());
                         MsgPack.MessagePackObject mmap_1 = message_1.Value;
-                        MsgPack.MessagePackObject mmap_2 = message_2.Value;
+                       // MsgPack.MessagePackObject mmap_2 = message_2.Value;
                         lock (thisLock_P1)
                         {
                             itemData_1 = JsonMapper.ToObject(mmap_1.ToString());
-                            itemData_2 = JsonMapper.ToObject(mmap_2.ToString());
+                            //itemData_2 = JsonMapper.ToObject(mmap_2.ToString());
 
                         }
-                        Debug.Log("p1 " + message_1);
-                        Debug.Log("p2 " + message_2);
+                       // Debug.Log("p1 " + message_1);
+                        //Debug.Log("p2 " + message_2);
                         failed_count_secs = 0;
                     }
                     catch
@@ -271,7 +300,7 @@ public class GazeListner : MonoBehaviour {
                 }
             }
             subscriberSocket_1.Close();
-            subscriberSocket_2.Close();
+         //   subscriberSocket_2.Close();
         }
         else
         {

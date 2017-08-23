@@ -4,26 +4,33 @@ using UnityEngine;
 
 public class BlinkDetection : MonoBehaviour
 {
-
+    public static BlinkDetection instance;
     public delegate void BlinkDelegate(double posX, double posY,string playerName);
     public event BlinkDelegate onBlinkHappen;
 
     double xPos = -1;
     double yPos = -1;
-    float confidence = -1;
+    public float confidence = -1;
     bool isGazeOnSurface = false;
     public PlayerData instanceP1;
-
-    bool isDetection, isOpenedinco;
+    public bool isOpenedinco;
+    bool isDetection;
     bool isCheckEyeOpen, isCoRoutineStarted;
 
     bool isUpdatePos;
     IEnumerator m_corot;
 
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
     // Use this for initialization
     void Start () {
         isCoRoutineStarted = false;
-        isOpenedinco = false;
+        isOpenedinco = true;
         isUpdatePos = true;
       
 	}
@@ -34,11 +41,6 @@ public class BlinkDetection : MonoBehaviour
         if (confidence > 0.9f && isGazeOnSurface)
         {
             isDetection = false;
-            if (isUpdatePos)
-            {
-                xPos = instanceP1.xpos;
-                yPos = instanceP1.ypos;
-            }
         } else {
             isDetection = true;
         }
@@ -58,7 +60,7 @@ public class BlinkDetection : MonoBehaviour
             yPos = instanceP1.ypos;
             confidence = instanceP1.confidence;
             isGazeOnSurface = instanceP1.isOnSurface;
-            //Debug.Log("confidence "+confidence);
+
         }
     }
 

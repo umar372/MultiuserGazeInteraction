@@ -4,16 +4,27 @@ using UnityEngine;
 
 public class GenerateBoard : MonoBehaviour {
 
+    public static GenerateBoard instance;
     public GameObject card;
     public PlayerData p1, p2;
     Sprite[] shuffeledImages;
     double xFactor, yFactor;
     GameObject higlightCard;
-
+    BlinkDetection bldet;
     public BlinkDetection blnkDetP1;
 
+    public string highLightCardName;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
     // Use this for initialization
     void Start () {
+        bldet = BlinkDetection.instance;
         InitializeBoard();
         if (ImagesHolder.instance != null)
         {
@@ -23,19 +34,15 @@ public class GenerateBoard : MonoBehaviour {
         xFactor = 1 / 25.0f;
         yFactor = 1 / 12.0f;
 
-        blnkDetP1.onBlinkHappen += (double xPos, double yPos, string playerName) =>
-        {
-          
-            string suffix = getGazeToCardPos(xPos, yPos);
-            Debug.Log("IBlink registrar "+suffix);
-            GameObject card = GameObject.Find("card" + suffix);
-            if (playerName == "player1" && card != null)
+        bldet.onBlinkHappen += (double x, double y, string name) => {
+            GameObject toFlop = GameObject.Find(highLightCardName);
+            if (toFlop != null)
             {
-                Debug.Log("In Player 1 falsing stuff");
-
-                card.transform.GetChild(0).gameObject.SetActive(false);
-                card.transform.GetChild(1).gameObject.SetActive(false);
-
+                Debug.Log("Found flop");
+                foreach(Transform t in toFlop.transform)
+                {
+                    t.gameObject.SetActive(false);
+                }
             }
         };
         //for(int i = 0)

@@ -7,7 +7,7 @@ public class MagicLense : MonoBehaviour
     private GameObject magnifyBorders;
     private LineRenderer LeftBorder, RightBorder, TopBorder, BottomBorder; // Reference for lines of magnify glass borders
     private float MGOX, MG0Y; // Magnify Glass Origin X and Y position
-    private float MGWidth = Screen.width / 5f, MGHeight = Screen.width / 5f; // Magnify glass width and height
+    private float MGWidth = Screen.width / 10f, MGHeight = Screen.width / 10f; // Magnify glass width and height
     private Vector3 mousePos;
     private Vector3 gazePosition;
     public PlayerData playerInstance;
@@ -64,12 +64,15 @@ public class MagicLense : MonoBehaviour
         MGOX = Screen.width / 2f - MGWidth / 2f;
         MG0Y = Screen.height / 2f - MGHeight / 2f;
         magnifyCamera = camera.AddComponent<Camera>();
+        magnifyCamera.cullingMask = 1 << 9;
         magnifyCamera.pixelRect = new Rect(MGOX, MG0Y, MGWidth, MGHeight);
+        magnifyCamera.clearFlags = Camera.main.GetComponent<Camera>().clearFlags;
+        magnifyCamera.backgroundColor = Camera.main.GetComponent<Camera>().backgroundColor;
         magnifyCamera.transform.position = new Vector3(0, 0, 0);
         if (Camera.main.orthographic)
         {
             magnifyCamera.orthographic = true;
-            magnifyCamera.orthographicSize = Camera.main.orthographicSize / 5.0f;//+ 1.0f;
+            magnifyCamera.orthographicSize = Camera.main.orthographicSize / 10.0f;//+ 1.0f;
             createBordersForMagniyGlass();
         }
         else

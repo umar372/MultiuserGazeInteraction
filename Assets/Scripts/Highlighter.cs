@@ -14,10 +14,13 @@ public class Highlighter : MonoBehaviour {
     Vector2 mousePos;// = new Vector2();
     public PlayerData p1;
 
+    public BlinkDetection blDet;
+
     GameObject cursorGr, cursorRed;
     //double xPos, yPos;
     // Use this for initialization
     void Start () {
+        blDet = BlinkDetection.instance;
         min = gameObject.GetComponent<Renderer>().bounds.min;
         max = gameObject.GetComponent<Renderer>().bounds.max;
         cover = gameObject.transform.GetChild(player);
@@ -38,11 +41,24 @@ public class Highlighter : MonoBehaviour {
         if (min.x < mousepos.x && mousepos.x < max.x && min.y < mousepos.y && mousepos.y < max.y)
         {
                 cover.gameObject.SetActive(true);
+            GenerateBoard.instance.highLightCardName = this.name;
         }
         else
         {
             cover.gameObject.SetActive(false);
         }
+
+        /*blDet.onBlinkHappen += (double x, double y, string name) =>
+        {
+            if (min.x < mousepos.x && mousepos.x < max.x && min.y < mousepos.y && mousepos.y < max.y)
+            {
+                foreach (Transform t in this.transform)
+                {
+                    t.gameObject.SetActive(false);
+                    t.gameObject.SetActive(false);
+                }
+            }
+        };*/
 	}
     public Vector3 getWorldPosition(Vector3 screenPos)
     {

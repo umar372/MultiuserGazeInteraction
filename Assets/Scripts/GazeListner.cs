@@ -168,7 +168,7 @@ public class GazeListner : MonoBehaviour {
         get_Data_Player1();
        // get_Data_Player2();
 
-        if (quPlayer1.Count < 20)
+        if (quPlayer1.Count < 5)
         {
             quPlayer1.Enqueue(new Vector2((float)xpos_1, (float)ypos_1));
 

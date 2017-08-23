@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class DoubleBlink : MonoBehaviour
 {
-    public delegate void DoubleBlinkDelegate(double posX, double posY);
+    public delegate void DoubleBlinkDelegate(double posX, double posY,string playerName);
     public event DoubleBlinkDelegate onDoubleBlinkHappen;
     double xPos = -1;
     double yPos = -1;
     float confidence = -1;
     float timeStamp = 0;
     bool isGazeOnSurface = false;
-    public GazeListner instanceP1;
+    public PlayerData instanceP1;
 
     bool isDetection, isOpenedinco;
     bool isCheckEyeOpen, isCoRoutineStarted;
@@ -21,7 +21,7 @@ public class DoubleBlink : MonoBehaviour
     float dTimer;
 
     IEnumerator m_corot;
-   /*
+   
     void Start()
     {
         isCoRoutineStarted = false;
@@ -61,7 +61,7 @@ public class DoubleBlink : MonoBehaviour
                 Debug.Log("Gesture detected");
                 if (onDoubleBlinkHappen != null)
                 {
-                    onDoubleBlinkHappen.Invoke(xPos, yPos);
+                    onDoubleBlinkHappen.Invoke(xPos, yPos,instanceP1.playerName);
                 }
             }
             
@@ -141,24 +141,5 @@ public class DoubleBlink : MonoBehaviour
         isCoRoutineStarted = false;
 
     }
-    IEnumerator waitforDBlink(float time)
-    {
-        //Debug.Log("In Enumerator");
-        Debug.Log("Wait for second blink...");
-        yield return new WaitForSeconds(time);
-        //Debug.Log("Coroutene stopped");
-        if (BlinkCount == 2)
-        {
-            BlinkCount = 0;
-            isTotalWait = false;
-            Debug.Log("Double Blink Detected");
-        }
 
-        else
-        {
-            BlinkCount = 0;
-            isTotalWait = false;
-            Debug.Log("No Double Blink Detected");
-        }
-    }*/
 }

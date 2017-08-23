@@ -6,9 +6,12 @@ public class Cursor : MonoBehaviour
 {
     private Vector3 gazePosition;
     public PlayerData playerInstance;
+
+    public BlinkDetection blDet;
     Vector3 gazeToWorldPos;
 
     public GameObject mCursor;
+   
     // Use this for initialization
     void Start()
     {
@@ -25,8 +28,11 @@ public class Cursor : MonoBehaviour
 
         gazeToWorldPos = getWorldPosition(gazePosition);
         gazeToWorldPos = new Vector3(gazeToWorldPos.x, gazeToWorldPos.y,0f);
-        mCursor.transform.position = gazeToWorldPos;
 
+        //if (blDet.confidence > 0.9f)
+            mCursor.transform.position = gazeToWorldPos;
+      //  else
+           // mCursor.transform.position = mCursor.transform.position;
     }
 
 

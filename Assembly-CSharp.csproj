@@ -39,10 +39,10 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>D:/InstallUnity5.6/Editor/Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>D:/InstallUnity5.6/Editor/Data/Managed/UnityEditor.dll</HintPath>
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -61,40 +61,37 @@
      <None Include="Assets\Shaders\Magnification.shader" />
      <None Include="Assets\samplefile.txt" />
  <Reference Include="UnityEngine.UI">
- <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
- <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
- <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
- <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
- <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
- <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="LitJson">
- <HintPath>D:/MastersStudy/MultiuserGazeInteraction/Assets/LitJson.dll</HintPath>
+ <HintPath>C:/Users/Nate/Gaze/MultiuserGazeInteraction/Assets/LitJson.dll</HintPath>
  </Reference>
  <Reference Include="AsyncIO">
- <HintPath>D:/MastersStudy/MultiuserGazeInteraction/Assets/DLLs/AsyncIO.dll</HintPath>
+ <HintPath>C:/Users/Nate/Gaze/MultiuserGazeInteraction/Assets/DLLs/AsyncIO.dll</HintPath>
  </Reference>
  <Reference Include="MsgPack">
- <HintPath>D:/MastersStudy/MultiuserGazeInteraction/Assets/DLLs/MsgPack.dll</HintPath>
+ <HintPath>C:/Users/Nate/Gaze/MultiuserGazeInteraction/Assets/DLLs/MsgPack.dll</HintPath>
  </Reference>
  <Reference Include="NetMQ">
- <HintPath>D:/MastersStudy/MultiuserGazeInteraction/Assets/DLLs/NetMQ.dll</HintPath>
- </Reference>
- <Reference Include="Mono.Cecil">
- <HintPath>D:/InstallUnity5.6/Editor/Data/Managed/Mono.Cecil.dll</HintPath>
+ <HintPath>C:/Users/Nate/Gaze/MultiuserGazeInteraction/Assets/DLLs/NetMQ.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

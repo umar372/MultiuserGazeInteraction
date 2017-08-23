@@ -166,9 +166,9 @@ public class GazeListner : MonoBehaviour {
     void Update()
     {
         get_Data_Player1();
-        get_Data_Player2();
+       // get_Data_Player2();
 
-        if (quPlayer1.Count < 3)
+        if (quPlayer1.Count < 20)
         {
             quPlayer1.Enqueue(new Vector2((float)xpos_1, (float)ypos_1));
 
@@ -182,11 +182,11 @@ public class GazeListner : MonoBehaviour {
             for (int i = 0; i < temp.Length; i++)
             {
                 xPosSumP1 += temp[i].x;
-                xPosSumP2 += temp[i].y;
+                yPosSumP1 += temp[i].y;
 
             }
             xposP1 = xPosSumP1 / temp.Length;
-            xposP2 = yPosSumP2 / temp.Length;
+            yposP1 = yPosSumP1 / temp.Length;
             quPlayer1.Dequeue();
 
         }

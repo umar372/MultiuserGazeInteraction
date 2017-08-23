@@ -8,8 +8,12 @@ public class GenerateBoard : MonoBehaviour {
     public PlayerData p1, p2;
     Sprite[] shuffeledImages;
     double xFactor, yFactor;
-	// Use this for initialization
-	void Start () {
+    GameObject higlightCard;
+
+    public BlinkDetection blnkDetP1;
+
+    // Use this for initialization
+    void Start () {
         InitializeBoard();
         if (ImagesHolder.instance != null)
         {
@@ -19,12 +23,27 @@ public class GenerateBoard : MonoBehaviour {
         xFactor = 1 / 25.0f;
         yFactor = 1 / 12.0f;
 
+        blnkDetP1.onBlinkHappen += (double xPos, double yPos, string playerName) =>
+        {
+          
+            string suffix = getGazeToCardPos(xPos, yPos);
+            Debug.Log("IBlink registrar "+suffix);
+            GameObject card = GameObject.Find("card" + suffix);
+            if (playerName == "player1" && card != null)
+            {
+                Debug.Log("In Player 1 falsing stuff");
+
+                card.transform.GetChild(0).gameObject.SetActive(false);
+                card.transform.GetChild(1).gameObject.SetActive(false);
+
+            }
+        };
         //for(int i = 0)
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        HiglightPlayer1();
+       // HiglightPlayer1();
 
     }
 
@@ -58,25 +77,38 @@ public class GenerateBoard : MonoBehaviour {
 
     void HiglightPlayer1()
     {
-        string suffix = getGazeToCardPos();
-        GameObject higlightCard = GameObject.Find("card"+suffix);
-
-        if (higlightCard != null)
+        
+        string suffix = getGazeToCardPos(p1.xpos,p1.ypos);
+        GameObject higlightCardLocal = GameObject.Find("card"+suffix);
+        /*if (higlightCard != null && higlightCardLocal != null && higlightCard != higlightCardLocal)
         {
-            Debug.Log(higlightCard.name);
-            higlightCard.transform.GetChild(1).gameObject.SetActive(true);
+            higlightCard.transform.GetChild(1).gameObject.SetActive(false);
+            higlightCard = higlightCardLocal;
+
+        }*/
+        
+        
+        
+        //Debug.Log("card" + suffix);
+
+        if (higlightCardLocal != null) //&& higlightCard != higlightCardLocal)
+        {
+            //Debug.Log(higlightCardLocal.name);
+            higlightCardLocal.transform.GetChild(1).gameObject.SetActive(true);
+            higlightCard = higlightCardLocal;
         }
     }
 
-    string getGazeToCardPos()
+    string getGazeToCardPos(double xPos,double yPos)
     {
-        double xpos, ypos;
+        double xpos_c, ypos_c;
         //Debug.Log("X Factor "+xFactor+ "YFactor" + yFactor + "xPos "+p1.xpos+"ypos "+p1.ypos);
+       // Debug.Log("P1 xpos ypos "+xPos+"    "+yPos);
+        xpos_c = Mathf.RoundToInt((float)(xPos /xFactor));
+        ypos_c = Mathf.RoundToInt((float)(yPos /yFactor));
 
-        xpos = Mathf.RoundToInt((float)(p1.xpos /xFactor));
-        ypos = Mathf.RoundToInt((float)(p1.ypos /yFactor));
-
-        Debug.Log("card"+ "_" + xpos.ToString() + "_" + ypos.ToString());
-        return "_"+xpos.ToString()+"_"+ypos.ToString();
+        return "_"+xpos_c.ToString()+"_"+ypos_c.ToString();
     }
+
+
 }

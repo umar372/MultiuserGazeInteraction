@@ -17,12 +17,15 @@ public class BlinkDetection : MonoBehaviour
     bool isDetection, isOpenedinco;
     bool isCheckEyeOpen, isCoRoutineStarted;
 
+    bool isUpdatePos;
     IEnumerator m_corot;
 
     // Use this for initialization
     void Start () {
         isCoRoutineStarted = false;
         isOpenedinco = false;
+        isUpdatePos = true;
+      
 	}
 	
 	// Update is called once per frame
@@ -31,9 +34,15 @@ public class BlinkDetection : MonoBehaviour
         if (confidence > 0.9f && isGazeOnSurface)
         {
             isDetection = false;
+            if (isUpdatePos)
+            {
+                xPos = instanceP1.xpos;
+                yPos = instanceP1.ypos;
+            }
         } else {
             isDetection = true;
         }
+       
         DetectBlink();
     }
 
@@ -64,6 +73,7 @@ public class BlinkDetection : MonoBehaviour
                     StartCoroutine(waitOnZeroConf(0.35f));
                     isOpenedinco = false;
                     isCoRoutineStarted = true;
+                    isUpdatePos = false;
                     //Debug.Log("Coroutiene Started");
 
                 }
@@ -74,6 +84,7 @@ public class BlinkDetection : MonoBehaviour
         if (isCoRoutineStarted && !isDetection)
         {
             isOpenedinco = true;
+            isUpdatePos = true;
         }
         if (isDetection == false)
         {
@@ -82,6 +93,7 @@ public class BlinkDetection : MonoBehaviour
             {
                 isCheckEyeOpen = false;
                 Debug.Log("Blink Gesture Detected");
+                isUpdatePos = true;
                 if (onBlinkHappen != null)
                 {
                     onBlinkHappen.Invoke(xPos, yPos,instanceP1.playerName);

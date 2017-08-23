@@ -8,23 +8,34 @@ public class Highlighter : MonoBehaviour {
     //public GameObject[] cards;
     private int player = 1;
     private Vector3 min, max;
+    Vector3 mousepos;
+    Transform cover;
+
     Vector2 mousePos;// = new Vector2();
-    PlayerData p1;
+    public PlayerData p1;
+
+    GameObject cursorGr, cursorRed;
     //double xPos, yPos;
     // Use this for initialization
     void Start () {
         min = gameObject.GetComponent<Renderer>().bounds.min;
         max = gameObject.GetComponent<Renderer>().bounds.max;
-        mousePos = new Vector2();
+        cover = gameObject.transform.GetChild(player);
+
+        cursorGr = GameObject.Find("cursorGreen");
     }
-	
-	// Update is called once per frame
-	void Update () {
-        Transform cover = gameObject.transform.GetChild(player);
-        // Vector3 mousepos = getWorldPosition(Input.mousePosition);
-        mousePos.x = (float)p1.xpos;
-        mousePos.y = (float)p1.ypos;
-        if (true)//min.x < mousepos.x && mousepos.x < max.x && min.y < mousepos.y && mousepos.y < max.y)
+
+    // Update is called once per frame
+    void Update () {
+        if (cursorGr == null)
+        {
+            mousepos = getWorldPosition(Input.mousePosition);
+        }
+        else {
+            Debug.Log("Found green and giving pos");
+            mousepos = cursorGr.transform.position;
+        }
+        if (min.x < mousepos.x && mousepos.x < max.x && min.y < mousepos.y && mousepos.y < max.y)
         {
                 cover.gameObject.SetActive(true);
         }

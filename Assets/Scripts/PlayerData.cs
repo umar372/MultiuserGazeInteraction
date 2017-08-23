@@ -34,7 +34,7 @@ public class PlayerData : MonoBehaviour
             ypos = gl.yposP1;
             confidence = gl.confidence_1;
             isOnSurface = gl.isOnSurface_1;
-            //Debug.Log("player name "+playerName+" x and y "+xpos+" "+ypos+" conf "+confidence+" isOnSurf "+isOnSurface);
+          //  Debug.Log("player name "+playerName+" x and y "+xpos+" "+ypos+" conf "+confidence+" isOnSurf "+isOnSurface);
 
         }
         else if (playerName == "player2")

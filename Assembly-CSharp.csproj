@@ -48,18 +48,16 @@
   <ItemGroup>
      <Compile Include="Assets\MagnifyGlass.cs" />
      <Compile Include="Assets\Scripts\BlinkDetection.cs" />
+     <Compile Include="Assets\Scripts\Cursor.cs" />
      <Compile Include="Assets\Scripts\DoubleBlink.cs" />
-     <Compile Include="Assets\Scripts\Eye3D.cs" />
      <Compile Include="Assets\Scripts\GameLogic.cs" />
      <Compile Include="Assets\Scripts\GazeListner.cs" />
      <Compile Include="Assets\Scripts\Highlighter.cs" />
      <Compile Include="Assets\Scripts\ImagesHolder.cs" />
      <Compile Include="Assets\Scripts\MagicLense.cs" />
      <Compile Include="Assets\Scripts\PlayerData.cs" />
-     <Compile Include="Assets\Scripts\PupilListener.cs" />
      <Compile Include="Assets\Scripts\Queue.cs" />
      <Compile Include="Assets\Scripts\UIScripts\GenerateBoard.cs" />
-     <Compile Include="Assets\Scripts\networkSocketSO.cs" />
      <None Include="Assets\Shaders\Magnification.shader" />
      <None Include="Assets\samplefile.txt" />
  <Reference Include="UnityEngine.UI">
@@ -79,6 +77,9 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.VR">
+ <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="LitJson">
  <HintPath>D:/MastersStudy/MultiuserGazeInteraction/Assets/LitJson.dll</HintPath>

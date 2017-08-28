@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 public class MagicLense : MonoBehaviour
 {
     private Camera magnifyCamera;
@@ -64,7 +64,14 @@ public class MagicLense : MonoBehaviour
         MGOX = Screen.width / 2f - MGWidth / 2f;
         MG0Y = Screen.height / 2f - MGHeight / 2f;
         magnifyCamera = camera.AddComponent<Camera>();
-        magnifyCamera.cullingMask = 1 << 9;
+
+        if (playerName == "player1"){
+            magnifyCamera.cullingMask = 1 << 9 | 1<<10;
+        }
+        else if (playerName == "player2")
+        {
+            magnifyCamera.cullingMask = 1 << 9 | 1 << 11;
+        }
         magnifyCamera.pixelRect = new Rect(MGOX, MG0Y, MGWidth, MGHeight);
         magnifyCamera.clearFlags = Camera.main.GetComponent<Camera>().clearFlags;
         magnifyCamera.backgroundColor = Camera.main.GetComponent<Camera>().backgroundColor;

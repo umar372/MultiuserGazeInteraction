@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour {
     public Text txScoreP1, txScoreP2;
 
     bool isPlayer1Flip, isPlayer2Flitp;
+
+    GameObject prevOpenedP1 = null, prevOpenedP2=null;
     void Awake()
     {
         if (instance == null)
@@ -53,12 +55,17 @@ public class GameController : MonoBehaviour {
     #region BlinksCode
     void Player1BlinkOccurs(double x, double y, string name)
     {
+        Debug.Log("Player1 Blinkc");
         GameObject toFlop = GameObject.Find(highLightCardNameP1);
-        toFlop.transform.GetChild(4).gameObject.SetActive(true);
-        if (toFlop != null && isPlayer1Flip)
+       // toFlop.transform.GetChild(4).gameObject.SetActive(true);
+        if (toFlop != null && isPlayer1Flip && prevOpenedP1 != toFlop)
         {
+            
+            Debug.Log("Player1 Opened " + toFlop.GetComponent<Highlighter>().idName);
+
             if (cardOpenCountP1 < 2)
             {
+                prevOpenedP1 = toFlop;
                 openCardHolderP1[cardOpenCountP1] = toFlop;
                 cardOpenCountP1 += 1;
                 foreach (Transform t in toFlop.transform)
@@ -68,18 +75,22 @@ public class GameController : MonoBehaviour {
 
             }
             else {
+                prevOpenedP1 = null;
                 if (openCardHolderP1[0].GetComponent<Highlighter>().idName == openCardHolderP1[1].GetComponent<Highlighter>().idName)
                 {
                     scoreCountP1 += 1;
                     txScoreP1.text = "Score : " + scoreCountP1;
                     StartCoroutine(waitBeforeClosingCardsP1(true));
                     isPlayer1Flip = false;
+                    Destroy(openCardHolderP1[0]);
+                    Destroy(openCardHolderP1[1]);
                     Debug.Log("Matchedd");
                 }
                 else {
                     Debug.Log("Not Matchedd");
                     StartCoroutine(waitBeforeClosingCardsP1(false));
                     isPlayer1Flip = false;
+
                 }
 
             }
@@ -91,12 +102,16 @@ public class GameController : MonoBehaviour {
     }
     void Player2BlinkOccurs(double x, double y, string name)
     {
+
         GameObject toFlop = GameObject.Find(highLightCardNameP2);
-        toFlop.transform.GetChild(5).gameObject.SetActive(true);
-        if (toFlop != null && isPlayer2Flitp)
+      //  toFlop.transform.GetChild(5).gameObject.SetActive(true);
+        if (toFlop != null && isPlayer2Flitp && prevOpenedP2 != toFlop)
         {
+            Debug.Log("Player2 Opened "+toFlop.GetComponent<Highlighter>().idName);
+
             if (cardOpenCountP2 < 2)
             {
+                prevOpenedP2 = toFlop;
                 openCardHolderP2[cardOpenCountP2] = toFlop;
                 cardOpenCountP2 += 1;
                 foreach (Transform t in toFlop.transform)
@@ -107,12 +122,16 @@ public class GameController : MonoBehaviour {
             }
             else
             {
+                prevOpenedP2 = null;
                 if (openCardHolderP2[0].GetComponent<Highlighter>().idName == openCardHolderP2[1].GetComponent<Highlighter>().idName)
                 {
                     scoreCountP2 += 1;
                     txScoreP2.text = "Score : " + scoreCountP2;
                     StartCoroutine(waitBeforeClosingCardsP2(true));
                     isPlayer2Flitp = false;
+                    
+                    Destroy(openCardHolderP2[0]);
+                    Destroy(openCardHolderP2[1]);
                     Debug.Log("Matchedd Player2");
                 }
                 else
@@ -140,16 +159,18 @@ public class GameController : MonoBehaviour {
         {
             openCardHolderP1[0].transform.GetChild(0).gameObject.SetActive(true);
             openCardHolderP1[1].transform.GetChild(0).gameObject.SetActive(true);
+            openCardHolderP1[0].transform.GetChild(4).gameObject.SetActive(true);
+            openCardHolderP1[1].transform.GetChild(4).gameObject.SetActive(true);
         }
         else {
-            Debug.Log(openCardHolderP1[0].gameObject+"  "+
-                openCardHolderP1[0].gameObject);
-            Destroy(openCardHolderP1[0].gameObject);
-            Destroy(openCardHolderP1[1].gameObject);
+           // Debug.Log(openCardHolderP1[0].gameObject+"  "+
+             //   openCardHolderP1[0].gameObject);
+            
 
         }
 
         openCardHolderP1.Equals(null);
+        openCardHolderP1 = new GameObject[2];
         isPlayer1Flip = true;
         cardOpenCountP1 = 0;
     }
@@ -161,15 +182,17 @@ public class GameController : MonoBehaviour {
         {
             openCardHolderP2[0].transform.GetChild(0).gameObject.SetActive(true);
             openCardHolderP2[1].transform.GetChild(0).gameObject.SetActive(true);
+            openCardHolderP2[0].transform.GetChild(5).gameObject.SetActive(true);
+            openCardHolderP2[1].transform.GetChild(5).gameObject.SetActive(true);
         }
         else
         {
 
-            Destroy(openCardHolderP2[0].gameObject);
-            Destroy(openCardHolderP2[1].gameObject);
+            
 
         }
         openCardHolderP2.Equals(null);
+        openCardHolderP2 = new GameObject[2];
         isPlayer2Flitp = true;
         cardOpenCountP2 = 0;
     }

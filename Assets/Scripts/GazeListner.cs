@@ -40,7 +40,7 @@ public class GazeListner : MonoBehaviour {
     public JsonData itemData_2;
     public Text normPosText, confidenceText, isOneSurface, blinkDetected;
 
-    Thread client_thread_P1;
+    Thread client_thread_P1,client_thread_P2;
     private System.Object thisLock_P1 = new System.Object();
     private System.Object thisLock_P2 = new System.Object();
     bool stop_thread_ = false;
@@ -87,13 +87,16 @@ public class GazeListner : MonoBehaviour {
 
 
 
-    int failed_count_secs = 0;
+    int failed_count_secs = 0, failed_count_secs2=0;
 
 
     GazeData.GazeData2D data_ = new GazeData.GazeData2D();
+    SubscriberSocket subscriberSocket_1, subscriberSocket_2;
 
 
      Queue<Vector2> quPlayer1, quPlayer2;
+
+    bool toggleRead;
 
 
     public void get_Data_Player1()
@@ -111,19 +114,20 @@ public class GazeListner : MonoBehaviour {
                         tmpXP1 = Math.Round((double)itemData_1["gaze_on_srf"][0]["norm_pos"][0], 2);
                         tmpYP1 = Math.Round((double)itemData_1["gaze_on_srf"][0]["norm_pos"][1], 2);
                         //normPosText.text = "Norm " + xpos_1 + " , " + ypos_1;
-                        if(tmpXP1 <= 1.0 && tmpXP1 >= 0)
-                            xpos_1 = tmpXP1;
-                        if(tmpYP1 <= 1.0 && tmpYP1 >= 0)
-                            ypos_1 = tmpYP1;
-                    }
-                    else
-                    {
-                        if(skipValuesP1 == 5)
-                        {
-                            skipValuesP1 = 0;
-                            beforeDropConfP1 = true;
-                        }
-                        skipValuesP1++;
+                         if(tmpXP1 <= 1.0 && tmpXP1 >= 0)
+                             xpos_1 = tmpXP1;
+                         if(tmpYP1 <= 1.0 && tmpYP1 >= 0)
+                             ypos_1 = tmpYP1;
+                     }
+                     else
+                     {
+                         if(skipValuesP1 == 5)
+                         {
+                             skipValuesP1 = 0;
+                             beforeDropConfP1 = true;
+                         }
+                         skipValuesP1++;
+                     }
                     }
                     if (itemData_1["gaze_on_srf"].Count > 0)
                     {
@@ -135,13 +139,13 @@ public class GazeListner : MonoBehaviour {
                     }
                 }
             }
-        }
+        
         
     }
 
     public void get_Data_Player2()
     {
-        lock (thisLock_P2)
+        lock (thisLock_P1)
         {
             if (itemData_2 != null)
             {
@@ -156,19 +160,20 @@ public class GazeListner : MonoBehaviour {
                         // normPosText.text = "Norm " + xpos_2 + " , " + ypos_2;
 
                         if (tmpXP2 <= 1.0 && tmpXP2 >= 0)
-                            xpos_2 = tmpXP2;
-                        if (tmpYP2 <= 1.0 && tmpYP2 >= 0)
-                            ypos_2 = tmpYP2;
+                             xpos_2 = tmpXP2;
+                         if (tmpYP2 <= 1.0 && tmpYP2 >= 0)
+                             ypos_2 = tmpYP2;
 
-                    }
-                    else
-                    {
-                        if (skipValuesP2 == 5)
-                        {
-                            skipValuesP2 = 0;
-                            beforeDropConfP2 = true;
-                        }
-                        skipValuesP2++;
+                     }
+                     else
+                     {
+                         if (skipValuesP2 == 5)
+                         {
+                             skipValuesP2 = 0;
+                             beforeDropConfP2 = true;
+                         }
+                         skipValuesP2++;
+                     }
                     }
                     if (itemData_2["gaze_on_srf"].Count > 0)
                     {
@@ -180,7 +185,7 @@ public class GazeListner : MonoBehaviour {
                     }
                 }
             }
-        }
+        
     }
     // Use this for initialization
     void Start () {
@@ -268,107 +273,13 @@ public class GazeListner : MonoBehaviour {
         }
     }
 
-   
+
 
 
     void MQClientForPlayers()
     {
-        
+
         string IPHeader_1 = ">tcp://" + IP_1 + ":";
-        string IPHeader_2 = ">tcp://" + IP_2 + ":";
-
-        var timeout = new System.TimeSpan(0, 0, 1); 
-
-        AsyncIO.ForceDotNet.Force();
-        NetMQConfig.ManualTerminationTakeOver();
-        NetMQConfig.ContextCreate(true);
-
-        string subport_1;
-        string subport_2;
-        Debug.Log("Connect to the server: " + IPHeader_1 + PORT_1 + ".");
-        Debug.Log("Connect to the server: " + IPHeader_2 + PORT_2 + ".");
-        var requestSocket_1 = new RequestSocket(IPHeader_1 + PORT_1);
-        requestSocket_1.SendFrame("SUB_PORT");
-        bool is_connected_1 = requestSocket_1.TryReceiveFrameString(timeout, out subport_1);
-        requestSocket_1.Close();
-
-        var requestSocket_2 = new RequestSocket(IPHeader_2 + PORT_2);
-        requestSocket_2.SendFrame("SUB_PORT");
-        bool is_connected_2 = requestSocket_2.TryReceiveFrameString(timeout, out subport_2);
-        requestSocket_2.Close();
-
-        if (is_connected_1 && is_connected_2)
-        {
-            // 
-            var subscriberSocket_1 = new SubscriberSocket(IPHeader_1 + subport_1);
-            var subscriberSocket_2 = new SubscriberSocket(IPHeader_2 + subport_2);
-            subscriberSocket_1.Subscribe(ID_1);
-            subscriberSocket_2.Subscribe(ID_2);
-
-            var msg_1 = new NetMQMessage();
-            var msg_2 = new NetMQMessage();
-            while ((is_connected_1 || is_connected_2 || failed_count_secs <20) && stop_thread_ == false)
-            {
-               // Debug.Log("Receive a multipart message.");
-                is_connected_1 = subscriberSocket_1.TryReceiveMultipartMessage(timeout, ref (msg_1));
-                is_connected_2 = subscriberSocket_2.TryReceiveMultipartMessage(timeout, ref (msg_2));
-                if (is_connected_1 && is_connected_2)
-                {
-                    //Debug.Log("Unpack a received multipart message.");
-                    try
-                    {
-                        //Debug.Log(msg[0].ConvertToString());
-                        var message_1 = MsgPack.Unpacking.UnpackObject(msg_1[1].ToByteArray());
-                        var message_2 = MsgPack.Unpacking.UnpackObject(msg_2[1].ToByteArray());
-                        MsgPack.MessagePackObject mmap_1 = message_1.Value;
-                        MsgPack.MessagePackObject mmap_2 = message_2.Value;
-                        lock (thisLock_P1)
-                        {
-                            itemData_1 = JsonMapper.ToObject(mmap_1.ToString());
-
-
-                        }
-                        lock (thisLock_P2)
-                        {
-                            itemData_2 = JsonMapper.ToObject(mmap_2.ToString());
-                        }
-                        
-                       // Debug.Log("p1 " + message_1);
-                       // Debug.Log("p2 " + message_2);
-                        failed_count_secs = 0;
-                    }
-                    catch
-                    {
-                        Debug.Log("Failed to unpack.");
-                    }
-                }
-                else
-                {
-                    Debug.Log("Failed to receive a message.");
-                    Thread.Sleep(1000);
-                    failed_count_secs += 1;
-                }
-            }
-            subscriberSocket_1.Close();
-            subscriberSocket_2.Close();
-        }
-        else
-        {
-            Debug.Log("Failed to connect the server.");
-        }
-
-        // Necessary to handle this NetMQ issue on Unity editor
-        // https://github.com/zeromq/netmq/issues/526
-        Debug.Log("ContextTerminate.");
-        NetMQConfig.ContextTerminate();
-
-    }
-
-
-  /* void MQClientForPlayers2()
-    {
-
-        string IPHeader_2 = ">tcp://" + IP_2 + ":";
 
         var timeout = new System.TimeSpan(0, 0, 1);
 
@@ -378,30 +289,31 @@ public class GazeListner : MonoBehaviour {
 
         string subport_1;
         string subport_2;
-        Debug.Log("Connect to the server: " + IPHeader_2 + PORT_2 + ".");
-     
+        Debug.Log("Connect to the server: " + IPHeader_1 + PORT_1 + ".");
+        var requestSocket_1 = new RequestSocket(IPHeader_1 + PORT_1);
+        requestSocket_1.SendFrame("SUB_PORT");
+        bool is_connected_1 = requestSocket_1.TryReceiveFrameString(timeout, out subport_1);
+        requestSocket_1.Close();
 
-        var requestSocket_2 = new RequestSocket(IPHeader_2 + PORT_2);
-        requestSocket_2.SendFrame("SUB_PORT");
-        bool is_connected_2 = requestSocket_2.TryReceiveFrameString(timeout, out subport_2);
-        requestSocket_2.Close();
-
-        if (is_connected_2)
+        client_thread_P2 = new Thread(MQClientForPlayer2);
+        client_thread_P2.Start();
+        if (is_connected_1)
         {
-            // 
-            var subscriberSocket_1 = new SubscriberSocket(IPHeader_1 + subport_1);
+
+            subscriberSocket_1 = new SubscriberSocket(IPHeader_1 + subport_1);
             //  var subscriberSocket_2 = new SubscriberSocket(IPHeader_2 + subport_2);
             subscriberSocket_1.Subscribe(ID_1);
             // subscriberSocket_2.Subscribe(ID_2);
 
             var msg_1 = new NetMQMessage();
             var msg_2 = new NetMQMessage();
-            while ((is_connected_1 || is_connected_2 || failed_count_secs < 20) && stop_thread_ == false)
+            while ((is_connected_1 || failed_count_secs < 20) && stop_thread_ == false)
             {
+
                 // Debug.Log("Receive a multipart message.");
                 is_connected_1 = subscriberSocket_1.TryReceiveMultipartMessage(timeout, ref (msg_1));
                 //  is_connected_2 = subscriberSocket_2.TryReceiveMultipartMessage(timeout, ref (msg_2));
-                if (is_connected_1 && is_connected_2)
+                if (is_connected_1)
                 {
                     //Debug.Log("Unpack a received multipart message.");
                     try
@@ -417,7 +329,7 @@ public class GazeListner : MonoBehaviour {
                             //itemData_2 = JsonMapper.ToObject(mmap_2.ToString());
 
                         }
-                        // Debug.Log("p1 " + message_1);
+                        //Debug.Log("p1 " + message_1);
                         //Debug.Log("p2 " + message_2);
                         failed_count_secs = 0;
                     }
@@ -428,30 +340,106 @@ public class GazeListner : MonoBehaviour {
                 }
                 else
                 {
-                    Debug.Log("Failed to receive a message.");
+                    Debug.Log("Failed to receive a message p1");
                     Thread.Sleep(1000);
                     failed_count_secs += 1;
                 }
             }
             subscriberSocket_1.Close();
+            subscriberSocket_2.Close();
             //   subscriberSocket_2.Close();
         }
         else
         {
-            Debug.Log("Failed to connect the server.");
+            Debug.Log("Failed to connect the server p1");
         }
 
         // Necessary to handle this NetMQ issue on Unity editor
         // https://github.com/zeromq/netmq/issues/526
-        Debug.Log("ContextTerminate.");
+        Debug.Log("ContextTerminate p1");
+
         NetMQConfig.ContextTerminate();
 
     }
-    */
+
+    void MQClientForPlayer2()
+    {
+
+        string IPHeader_2 = ">tcp://" + IP_2 + ":";
+        var timeout = new System.TimeSpan(0, 0, 1);
+
+
+
+        string subport_2;
+        Debug.Log("Connect to the server: " + IPHeader_2 + PORT_2 + ".");
+
+
+        var requestSocket_2 = new RequestSocket(IPHeader_2 + PORT_2);
+        requestSocket_2.SendFrame("SUB_PORT");
+        bool is_connected_2 = requestSocket_2.TryReceiveFrameString(timeout, out subport_2);
+        requestSocket_2.Close();
+
+        if (is_connected_2)
+        {
+            // 
+            subscriberSocket_2 = new SubscriberSocket(IPHeader_2 + subport_2);
+            subscriberSocket_2.Subscribe(ID_2);
+
+            var msg_2 = new NetMQMessage();
+            while ((is_connected_2 || failed_count_secs2 < 20) && stop_thread_ == false)
+            {
+                // Debug.Log("Receive a multipart message.");
+                is_connected_2 = subscriberSocket_2.TryReceiveMultipartMessage(timeout, ref (msg_2));
+                if (is_connected_2)
+                {
+                    //Debug.Log("Unpack a received multipart message.");
+                    try
+                    {
+                        //Debug.Log(msg[0].ConvertToString());
+                        var message_2 = MsgPack.Unpacking.UnpackObject(msg_2[1].ToByteArray());
+                        MsgPack.MessagePackObject mmap_2 = message_2.Value;
+                        lock (thisLock_P2)
+                        {
+                            itemData_2 = JsonMapper.ToObject(mmap_2.ToString());
+
+                        }
+                       // Debug.Log("p2 " + message_2);
+
+                        failed_count_secs2 = 0;
+                    }
+                    catch
+                    {
+                        Debug.Log("Failed to unpack.");
+                    }
+                }
+                else
+                {
+                    Debug.Log("Failed to receive a message p2");
+                    Thread.Sleep(1000);
+                    failed_count_secs2 += 1;
+                }
+            }
+            subscriberSocket_1.Close();
+            subscriberSocket_2.Close();
+        }
+        else
+        {
+            Debug.Log("Failed to connect the server p2");
+        }
+
+        // Necessary to handle this NetMQ issue on Unity editor
+        // https://github.com/zeromq/netmq/issues/526
+        Debug.Log("ContextTerminate p2");
+
+
+    }
     void OnApplicationQuit()
     {
-        lock (thisLock_P1) lock(thisLock_P2) stop_thread_ = true;
+        lock (thisLock_P1) stop_thread_ = true;
         client_thread_P1.Join();
+
+        lock (thisLock_P2) stop_thread_ = true;
+        client_thread_P2.Join();
         Debug.Log("Quit the thread.");
     }
 }

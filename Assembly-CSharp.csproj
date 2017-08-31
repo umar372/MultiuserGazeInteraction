@@ -83,16 +83,16 @@
  <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="LitJson">
- <HintPath>D:/MultiuserGazeInteraction/Assets/LitJson.dll</HintPath>
+ <HintPath>D:/MastersStudy/CV/MultiuserGazeInteraction/Assets/LitJson.dll</HintPath>
  </Reference>
  <Reference Include="AsyncIO">
- <HintPath>D:/MultiuserGazeInteraction/Assets/DLLs/AsyncIO.dll</HintPath>
+ <HintPath>D:/MastersStudy/CV/MultiuserGazeInteraction/Assets/DLLs/AsyncIO.dll</HintPath>
  </Reference>
  <Reference Include="MsgPack">
- <HintPath>D:/MultiuserGazeInteraction/Assets/DLLs/MsgPack.dll</HintPath>
+ <HintPath>D:/MastersStudy/CV/MultiuserGazeInteraction/Assets/DLLs/MsgPack.dll</HintPath>
  </Reference>
  <Reference Include="NetMQ">
- <HintPath>D:/MultiuserGazeInteraction/Assets/DLLs/NetMQ.dll</HintPath>
+ <HintPath>D:/MastersStudy/CV/MultiuserGazeInteraction/Assets/DLLs/NetMQ.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
  <HintPath>D:/InstallUnity5.6/Editor/Data/Managed/Mono.Cecil.dll</HintPath>

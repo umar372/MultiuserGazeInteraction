@@ -12,7 +12,7 @@ public class Highlighter : MonoBehaviour {
 
     GameObject cursorGr, cursorRed;
 
-
+    public bool isThisCardOpen;
     public string idName;
     // Use this for initialization
     void Start () {
@@ -35,11 +35,11 @@ public class Highlighter : MonoBehaviour {
 
         mousepos = cursorGr.transform.position;
         mousposP2 = cursorRed.transform.position;
-        if (min.x < mousepos.x && mousepos.x < max.x && min.y < mousepos.y && mousepos.y < max.y)
+        if (min.x < mousepos.x && mousepos.x < max.x && min.y < mousepos.y && mousepos.y < max.y&&!isThisCardOpen)
         {
             cover.gameObject.SetActive(true);
             GameController.instance.highLightCardNameP1 = this.name;
-        }else if (min.x < mousposP2.x && mousposP2.x < max.x && min.y < mousposP2.y && mousposP2.y < max.y)
+        }else if (min.x < mousposP2.x && mousposP2.x < max.x && min.y < mousposP2.y && mousposP2.y < max.y&&!isThisCardOpen)
         {
             cover2.gameObject.SetActive(true);
             GameController.instance.highLightCardNameP2 = this.name;

@@ -18,6 +18,8 @@ public class MagicLense : MonoBehaviour
     public Color color;
     public Material lineMat;
 
+    public static bool isRestared;
+
     void Start()
     {
         playerName = playerInstance.playerName;
@@ -28,6 +30,7 @@ public class MagicLense : MonoBehaviour
 
     void Update()
     {
+
         if (playerInstance != null)
             gazePosition = new Vector3((float)playerInstance.xpos * Screen.width, (float)playerInstance.ypos * Screen.height, 0f);
 
@@ -61,16 +64,21 @@ public class MagicLense : MonoBehaviour
     private void createMagnifyGlass()
     {
         GameObject camera = new GameObject(playerName + "Camera");
+        if (playerName == "player1")
+            UIController.instance.ml1camera = camera;
+        if (playerName == "player2")
+            UIController.instance.ml2camera = camera;
+
         MGOX = Screen.width / 2f - MGWidth / 2f;
         MG0Y = Screen.height / 2f - MGHeight / 2f;
         magnifyCamera = camera.AddComponent<Camera>();
 
         if (playerName == "player1"){
-            magnifyCamera.cullingMask = 1 << 9 | 1<<10;
+            magnifyCamera.cullingMask = 1 << 9 | 1<<10 | 1<<5;
         }
         else if (playerName == "player2")
         {
-            magnifyCamera.cullingMask = 1 << 9 | 1 << 11;
+            magnifyCamera.cullingMask = 1 << 9 | 1 << 11 | 1 << 5;
         }
         magnifyCamera.pixelRect = new Rect(MGOX, MG0Y, MGWidth, MGHeight);
         magnifyCamera.clearFlags = Camera.main.GetComponent<Camera>().clearFlags;
@@ -94,6 +102,10 @@ public class MagicLense : MonoBehaviour
     private void createBordersForMagniyGlass()
     {
         magnifyBorders = new GameObject(playerName + "border");
+        if(playerName == "player1")
+            UIController.instance.ml1border = magnifyBorders;
+        if (playerName == "player2")
+            UIController.instance.ml2border = magnifyBorders;
         LeftBorder = getLine();
         LeftBorder.SetVertexCount(2);
         LeftBorder.SetPosition(0, new Vector3(getWorldPosition(new Vector3(MGOX, MG0Y, 0)).x, getWorldPosition(new Vector3(MGOX, MG0Y, 0)).y - 0.1f, -1));

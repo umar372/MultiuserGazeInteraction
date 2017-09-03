@@ -9,7 +9,11 @@ public class ImagesHolder : MonoBehaviour {
     public Sprite[] shuffledImages;
 
 
+    public enum GameModes {EASY,MEDIUM,HARD};
+    public int gameMode,cardLength;
+
     Hashtable cardHash;
+    public bool isDoImages;
     void Awake()
     {
         if (instance == null)
@@ -19,51 +23,47 @@ public class ImagesHolder : MonoBehaviour {
     }
 	// Use this for initialization
 	void Start () {
-        cardHash = new Hashtable();
 
-        suffleImages();
-        //shuffle();
+    
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
-
-    void shuffle()
-    {
-        Sprite[] tempImages = new Sprite[cardImages.Length * 2];
-        for (int i = 0; i < cardImages.Length; i++)
+        if (isDoImages)
         {
-            tempImages[i] = cardImages[i];
-            tempImages[i + cardImages.Length] = cardImages[i];
-        }
+            cardHash = new Hashtable();
+            gameMode = PlayerPrefs.GetInt("gameMode");
+           // Debug.Log("Value Gets is " + gameMode);
 
-        Hashtable tempHash = new Hashtable();
-
-        for (int i = 0; i < tempImages.Length; i++)
-        {
-            if (tempHash.Contains(tempImages[i].name))
+            switch (gameMode)
             {
-                tempHash.Add(tempImages[i].name + "_a", tempImages[i]);
+                case 0:
+                    cardLength = 20;
+                    break;
+                case 1:
+                    cardLength = 80;
+                    break;
+                case 2:
+                    cardLength = cardImages.Length;
+                    break;
+                default:
+                    break;
             }
-            else {
 
-            }
-            
-        }
-
-        
-
-
-    }
+            suffleImages();
+            GenerateBoard.instance.isInitializeBoard = true;
+            isDoImages = false;
+        }	
+	}
 
     void suffleImages()
     {
+        
         List<Sprite> tempImages = new List<Sprite>();
-        shuffledImages = new Sprite[cardImages.Length*2];
+        shuffledImages = new Sprite[cardLength*2];
 
-        for (int i = 0; i < cardImages.Length; i++)
+        for (int i = 0; i < cardLength; i++)
         {
             tempImages.Add(cardImages[i]);
             tempImages.Add(cardImages[i]);

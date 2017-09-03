@@ -345,6 +345,7 @@ public class GazeListner : MonoBehaviour {
                     failed_count_secs += 1;
                 }
             }
+
             subscriberSocket_1.Close();
             subscriberSocket_2.Close();
             //   subscriberSocket_2.Close();
@@ -419,8 +420,9 @@ public class GazeListner : MonoBehaviour {
                     failed_count_secs2 += 1;
                 }
             }
-            subscriberSocket_1.Close();
-            subscriberSocket_2.Close();
+            
+            //subscriberSocket_1.Close();
+            //subscriberSocket_2.Close();
         }
         else
         {

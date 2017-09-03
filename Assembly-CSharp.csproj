@@ -50,17 +50,29 @@
      <Compile Include="Assets\Scripts\BlinkDetection.cs" />
      <Compile Include="Assets\Scripts\Cursor.cs" />
      <Compile Include="Assets\Scripts\DoubleBlink.cs" />
+     <Compile Include="Assets\Scripts\FocusedOject.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\GameLogic.cs" />
+     <Compile Include="Assets\Scripts\GameTimer.cs" />
      <Compile Include="Assets\Scripts\GazeListner.cs" />
      <Compile Include="Assets\Scripts\Highlighter.cs" />
      <Compile Include="Assets\Scripts\ImagesHolder.cs" />
      <Compile Include="Assets\Scripts\MagicLense.cs" />
+     <Compile Include="Assets\Scripts\MagicLenseControl.cs" />
      <Compile Include="Assets\Scripts\PlayerData.cs" />
      <Compile Include="Assets\Scripts\Queue.cs" />
+     <Compile Include="Assets\Scripts\UIController.cs" />
+     <Compile Include="Assets\Scripts\UIOptionsSelection.cs" />
      <Compile Include="Assets\Scripts\UIScripts\GenerateBoard.cs" />
+     <Compile Include="Assets\Splatter Effects\Scripts\BallCOntroller.cs" />
+     <Compile Include="Assets\Splatter Effects\Scripts\PlayerController.cs" />
+     <Compile Include="Assets\Splatter Effects\Scripts\Shooter.cs" />
+     <Compile Include="Assets\Splatter Effects\Scripts\SplashOnTap.cs" />
+     <Compile Include="Assets\Splatter Effects\Scripts\Splatter.cs" />
      <None Include="Assets\Shaders\Magnification.shader" />
      <None Include="Assets\samplefile.txt" />
+     <None Include="Assets\Splatter Effects\Shaders\Splatter.shader" />
+     <None Include="Assets\Splatter Effects\Shaders\Surface.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/InstallUnity5.6/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
